@@ -1,0 +1,576 @@
+/* ============================================================
+   Header — Spend Clarity (cmp-header)
+   Matches Figma "Spend Clarity Demo FINAL":
+     Row 1  VISA  Spend Clarity | Enterprise          (gold divider)
+     Row 2  Home  My Spend ▾  Approvals  Cards  Virtual Cards ▾  Search  Reports ▾  Administration ▾  🔔  👤 Stacey ▾
+   Active tab: 3px navy indicator on the TOP edge of the tab.
+   Header closes with a 3px grey rule, as in the Figma.
+
+   A11y: AA contrast for all text (lowest 7.0:1), targets >= 40px,
+   visible focus, forced-colors + reduced-motion support.
+   ============================================================ */
+
+.cmp-header {
+    --cmp-header-navy: #1a1f71;    /* VISA, active indicator  16.0:1 */
+    --cmp-header-blue: #1434cb;    /* product, user name       8.2:1 */
+    --cmp-header-text: #202124;    /* nav labels              16.1:1 */
+    --cmp-header-muted: #52555c;   /* Enterprise               7.6:1 */
+    --cmp-header-gold: #f7b600;    /* divider (decorative)           */
+    --cmp-header-rule: #e3e5e8;
+    --cmp-header-band: #d5d8dc;
+    --cmp-header-hover-bg: #f3f5f8;
+    --cmp-header-focus: #1976d2;
+    --cmp-header-badge: #c8102e;
+    --cmp-header-pad-x: 24px;
+    --cmp-header-tab-h: 44px;
+
+    position: relative;
+    z-index: 100;
+    box-sizing: border-box;
+    width: 100%;
+    background: #fff;
+    border-bottom: 3px solid var(--cmp-header-band);
+    font-family: "Nunito Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+    color: var(--cmp-header-text);
+}
+.cmp-header *,
+.cmp-header *::before,
+.cmp-header *::after {
+    box-sizing: border-box;
+}
+
+.cmp-header__sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* ---------- Skip link ---------- */
+.cmp-header__skip {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 2;
+    padding: 10px 16px;
+    border-radius: 6px;
+    background: var(--cmp-header-navy);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+
+    &:focus {
+        transform: none;
+        outline: 2px solid var(--cmp-header-gold);
+        outline-offset: 2px;
+    }
+}
+
+/* ---------- Row 1: brand ---------- */
+.cmp-header__brand-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 72px;
+    padding: 0 var(--cmp-header-pad-x);
+    border-bottom: 1px solid var(--cmp-header-rule);
+}
+
+.cmp-header__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    border-radius: 2px;
+    color: var(--cmp-header-blue);
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.1;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:focus-visible {
+        outline: 2px solid var(--cmp-header-focus);
+        outline-offset: 4px;
+    }
+}
+
+.cmp-header__logo {
+    display: block;
+    flex-shrink: 0;
+    height: 24px;
+    width: auto;
+    margin-right: 4px;
+}
+
+.cmp-header__logo--default {
+    height: auto;
+    color: var(--cmp-header-navy);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 900;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+
+.cmp-header__product {
+    font-weight: 300;
+}
+
+.cmp-header__divider {
+    display: inline-block;
+    width: 2px;
+    height: 26px;
+    background: var(--cmp-header-gold);
+}
+
+.cmp-header__edition {
+    color: var(--cmp-header-muted);
+    font-weight: 300;
+}
+
+/* Mobile-only menu toggle */
+.cmp-header__menu-toggle {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 12px;
+    border: 1px solid var(--cmp-header-band);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--cmp-header-text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+        background: var(--cmp-header-hover-bg);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--cmp-header-focus);
+        outline-offset: 2px;
+    }
+}
+
+/* ---------- Row 2: nav + utility ---------- */
+.cmp-header__nav {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 var(--cmp-header-pad-x);
+}
+
+.cmp-header__primary {
+    display: flex;
+}
+
+.cmp-header__nav-list,
+.cmp-header__utility {
+    display: flex;
+    align-items: stretch;
+    gap: 11px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cmp-header__utility {
+    gap: 8px;
+}
+
+/* Figma: first label ("Home") starts 49px from the page edge */
+.cmp-header__nav-list {
+    margin-left: 14px;
+}
+
+.cmp-header__nav-item {
+    position: relative;
+    display: flex;
+}
+
+/* Tabs: shared look for links and disclosure buttons */
+.cmp-header__nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: var(--cmp-header-tab-h);
+    margin: 0;
+    padding: 0 11px;
+    border: 0;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent; /* keeps the label optically centred */
+    background: transparent;
+    color: var(--cmp-header-text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+        color: var(--cmp-header-blue);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--cmp-header-focus);
+        outline-offset: -2px;
+        border-radius: 2px;
+    }
+
+    &--active,
+    &[aria-current="page"] {
+        border-top-color: var(--cmp-header-navy);
+        color: var(--cmp-header-navy);
+    }
+}
+
+/* Parent tab of the current page (nested link is aria-current) */
+.cmp-header__nav-item:has(.cmp-header__subnav-link[aria-current="page"]) > .cmp-header__nav-link {
+    border-top-color: var(--cmp-header-navy);
+    color: var(--cmp-header-navy);
+}
+
+.cmp-header__caret {
+    flex-shrink: 0;
+    transition: transform .15s ease;
+}
+
+.cmp-header__nav-link[aria-expanded="true"] .cmp-header__caret {
+    transform: rotate(180deg);
+}
+
+/* Account trigger */
+.cmp-header__user {
+    color: var(--cmp-header-navy);
+}
+
+.cmp-header__caret path {
+    stroke-width: 2.25;
+}
+
+.cmp-header__user-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.cmp-header__user-name {
+    font-weight: 400;
+}
+
+/* Notifications (rendered only when authored) */
+.cmp-header__notifications {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--cmp-header-navy);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--cmp-header-hover-bg);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--cmp-header-focus);
+        outline-offset: 2px;
+    }
+}
+
+.cmp-header__notifications-icon {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.cmp-header__badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    background: var(--cmp-header-badge);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 12px;
+    text-align: center;
+}
+
+.cmp-header__notifications[aria-expanded="true"] {
+    background: var(--cmp-header-hover-bg);
+}
+
+/* ---------- Dropdowns ---------- */
+.cmp-header__subnav-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    min-width: 220px;
+    margin: 1px 0 0;
+    padding: 6px 0;
+    border: 1px solid var(--cmp-header-band);
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .08);
+    list-style: none;
+
+    &[hidden] {
+        display: none;
+    }
+
+    &--end {
+        right: 0;
+        left: auto;
+    }
+}
+
+.cmp-header__subnav-item {
+    display: block;
+}
+
+.cmp-header__subnav-link {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 8px 16px;
+    color: var(--cmp-header-text);
+    font-size: 14px;
+    text-decoration: none;
+
+    &:hover {
+        background: var(--cmp-header-hover-bg);
+        color: var(--cmp-header-blue);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--cmp-header-focus);
+        outline-offset: -2px;
+    }
+
+    &[aria-current="page"] {
+        color: var(--cmp-header-navy);
+        font-weight: 600;
+    }
+}
+
+.cmp-header__subnav-note {
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--cmp-header-rule);
+    color: var(--cmp-header-muted);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* ---------- Tablet / mobile: collapsible panel ---------- */
+@media (max-width: 899.98px) {
+    .cmp-header__brand-bar {
+        min-height: 64px;
+    }
+
+    .cmp-header__brand {
+        gap: 8px;
+        font-size: 18px;
+    }
+
+    .cmp-header__logo--default {
+        font-size: 24px;
+    }
+
+    .cmp-header__divider {
+        height: 20px;
+    }
+
+    .cmp-header__menu-toggle {
+        display: inline-flex;
+    }
+
+    .cmp-header__nav {
+        display: none;
+        flex-direction: column;
+        gap: 0;
+        padding: 8px var(--cmp-header-pad-x) 16px;
+    }
+
+    .cmp-header__nav--open {
+        display: flex;
+    }
+
+    .cmp-header__primary {
+        display: block;
+    }
+
+    .cmp-header__nav-list,
+    .cmp-header__utility {
+        flex-direction: column;
+        gap: 0;
+        margin-left: 0;
+    }
+
+    .cmp-header__utility {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid var(--cmp-header-rule);
+    }
+
+    .cmp-header__nav-item {
+        flex-direction: column;
+    }
+
+    .cmp-header__nav-link {
+        justify-content: space-between;
+        width: 100%;
+        padding: 0 12px;
+        border-top: 0;
+        border-bottom: 0;
+        border-left: 3px solid transparent;
+        text-align: left;
+
+        &--active,
+        &[aria-current="page"] {
+            border-left-color: var(--cmp-header-navy);
+            background: var(--cmp-header-hover-bg);
+        }
+    }
+
+    .cmp-header__nav-item:has(.cmp-header__subnav-link[aria-current="page"]) > .cmp-header__nav-link {
+        border-left-color: var(--cmp-header-navy);
+    }
+
+    .cmp-header__user {
+        justify-content: flex-start;
+
+        .cmp-header__caret {
+            margin-left: auto;
+        }
+    }
+
+    .cmp-header__notifications {
+        align-self: flex-start;
+    }
+
+    .cmp-header__subnav-list,
+    .cmp-header__subnav-list--end {
+        position: static;
+        min-width: 0;
+        margin: 0;
+        padding: 0 0 4px 24px;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 479.98px) {
+    .cmp-header {
+        --cmp-header-pad-x: 16px;
+    }
+
+    .cmp-header__brand-bar {
+        gap: 8px;
+    }
+
+    .cmp-header__brand {
+        gap: 6px;
+        font-size: 15px;
+    }
+
+    .cmp-header__logo--default {
+        font-size: 20px;
+    }
+
+    .cmp-header__divider {
+        height: 18px;
+    }
+
+    .cmp-header__menu-toggle {
+        gap: 6px;
+        padding: 0 10px;
+    }
+}
+
+/* Narrowest phones: icon-only toggle, "Menu" kept as its accessible name */
+@media (max-width: 379.98px) {
+    .cmp-header__menu-toggle {
+        justify-content: center;
+        width: 44px;
+        padding: 0;
+    }
+
+    .cmp-header__menu-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+}
+
+/* ---------- User preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .cmp-header__caret {
+        transition: none;
+    }
+}
+
+@media (forced-colors: active) {
+    .cmp-header__nav-link {
+        border-top-color: Canvas;
+        border-bottom-color: Canvas;
+    }
+
+    .cmp-header__nav-link--active,
+    .cmp-header__nav-link[aria-current="page"] {
+        border-top-color: Highlight;
+    }
+
+    .cmp-header__divider {
+        background: CanvasText;
+    }
+
+    .cmp-header__subnav-list {
+        border-color: CanvasText;
+    }
+}
+
+@media (forced-colors: active) and (max-width: 899.98px) {
+    .cmp-header__nav-link {
+        border-left-color: Canvas;
+    }
+
+    .cmp-header__nav-link--active,
+    .cmp-header__nav-link[aria-current="page"] {
+        border-left-color: Highlight;
+    }
+}

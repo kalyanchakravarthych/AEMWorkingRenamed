@@ -1,0 +1,55 @@
+<!--/* VSC Three Column Grid — dashboard three-column layout.
+
+    Column geometry is tied to the header's primary navigation:
+      - Column 1  starts at the LEFT edge of the "My Spend" tab label
+      - Column 1  ends at the "r" of "Cards" in "Virtual Cards"
+        (the second "r" when reading "Virtual Cards" left-to-right).
+      - Column 2  starts at the letter after that "r" (the "d").
+      - Column 3  ends on the header's right content edge (same edge
+        the VSC Two Column Grid uses, matching the "Andrew/Stacey" area).
+      - The space after column 3 matches the header's right padding.
+
+    _threecolgrid.scss sets fallback values that match the default header;
+    _threecolgrid.js measures the real tabs and refines them, so alignment
+    holds for any font, authored nav label or viewport width.
+
+    All three columns are OOB Layout Containers (wcm/foundation/components/
+    responsivegrid): Layout mode, column resizing, policies and the OOB
+    drop-zone placeholders all work unchanged inside each column.
+
+    Below 900px (where the header collapses into the Menu button) the grid
+    stacks into a single column.
+
+    Alignment (dialog "Align to"):
+      tab (default) = edges of the tab boxes (My Spend tab box ↔ "r" edges)
+      label         = edges of the visible tab text (My Spend text ↔ "r" edges)
+
+    ACCESSIBILITY:
+      - Authors can assign an ARIA landmark role (region / complementary /
+        main) via the "ARIA role" dialog field. If a landmark is assigned,
+        the "ARIA label" field must also be set so screen-reader users hear
+        a meaningful name when navigating by landmark.
+      - Keyboard navigation is NOT overridden - focus flows naturally through
+        the columns in DOM order (left ▸ middle ▸ right).
+      - No tabindex is forced, so authored content keeps its own tab order.
+      - data-sly-attribute is used so role/aria-label attributes are omitted
+        entirely when empty (no empty `role=""` leaks into the DOM, which
+        would fail WAI-ARIA validation and Lighthouse). */-->
+<div class="cmp-threecolgrid"
+     id="${properties.id}"
+     data-cmp-threecolgrid
+     data-cmp-threecolgrid-align="${properties.alignTo == 'label' ? 'label' : 'tab'}"
+     data-sly-attribute.role="${properties.role}"
+     data-sly-attribute.aria-label="${properties.ariaLabel}">
+    <div class="cmp-threecolgrid__inner">
+        <div class="cmp-threecolgrid__col cmp-threecolgrid__col--left">
+            <sly data-sly-resource="${'left-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+        <div class="cmp-threecolgrid__col cmp-threecolgrid__col--middle">
+            <sly data-sly-resource="${'middle-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+        <div class="cmp-threecolgrid__col cmp-threecolgrid__col--right">
+            <sly data-sly-resource="${'right-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+    </div>
+</div>

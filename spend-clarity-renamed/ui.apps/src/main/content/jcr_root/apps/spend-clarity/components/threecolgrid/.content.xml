@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    cq:isContainer="{Boolean}true"
+    jcr:description="Dashboard three-column layout. Column 1 starts under the My Spend tab; column 1 ends at the 'r' of Cards in Virtual Cards; column 2 starts after that 'r'; column 3 matches the header's right content edge. Supports optional ARIA landmark role + label (dialog Accessibility tab) for keyboard / screen-reader navigation."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Three Column Grid"
+    componentGroup="VSC - Layout"/>

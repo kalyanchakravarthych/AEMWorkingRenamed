@@ -1,0 +1,345 @@
+<!--/* VSC Card Listing — Cards page (Figma "Spend Clarity Demo FINAL").
+    - Filter bar + "Create card" split button
+    - Bulk-action toolbar (selection count + Update cards)
+    - Cards table: the default rows are rendered on the server, so they show
+      in the AEM editor, in preview/publish and without JavaScript.
+    - Pagination: drop a "VSC Pagination" component below this one. The table
+      shows "Rows per page" rows (dialog, default 2); the 3rd row moves to page 2.
+      Without a pager on the page, all rows are shown.
+    All create/filter actions are in-memory (no backend). */-->
+<sly data-sly-test.pageSize="${properties.pageSize || 2}"/>
+<section class="cmp-cardlist" id="${properties.id}" data-cmp-cardlist
+         data-cmp-cardlist-page-size="${pageSize}" aria-labelledby="cmp-cardlist-title">
+    <h1 class="cmp-visually-hidden" id="cmp-cardlist-title">Cards</h1>
+
+    <!-- ============ Top row: filter LEFT, Create card RIGHT ============ -->
+    <div class="cmp-cardlist__top">
+        <div class="cmp-filter cmp-cardlist__filter">
+            <button type="button" class="cmp-filter__trigger" data-cmp-filter-trigger
+                    aria-haspopup="dialog" aria-expanded="false" aria-controls="cmp-cardlist-filter-panel">
+                <svg class="cmp-cardlist__filter-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                    <path d="M3 6h11M18 6h3M3 12h4M11 12h10M3 18h13M20 18h1" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <circle cx="16" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="9" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="18" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span class="cmp-cardlist__filter-label" data-cmp-filter-label>1 filter applied</span>
+                <svg class="cmp-cardlist__chevron" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+                    <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="cmp-filter__panel" id="cmp-cardlist-filter-panel" role="dialog" aria-labelledby="cmp-cardlist-filter-title" hidden>
+                <h2 class="cmp-filter__title" id="cmp-cardlist-filter-title">Filter by status</h2>
+                <fieldset class="cmp-filter__group">
+                    <legend class="cmp-filter__legend">Status</legend>
+                    <label class="cmp-filter__check"><input type="checkbox" value="Active" checked data-cmp-filter-opt/><span>Active</span></label>
+                    <label class="cmp-filter__check"><input type="checkbox" value="Inactive" data-cmp-filter-opt/><span>Inactive</span></label>
+                </fieldset>
+                <div class="cmp-filter__actions">
+                    <button type="button" class="cmp-filter__clear" data-cmp-filter-clear>Clear</button>
+                    <button type="button" class="cmp-filter__apply" data-cmp-filter-apply>Apply</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="cmp-splitbtn">
+            <button type="button" class="cmp-splitbtn__main" data-cmp-create-trigger
+                    aria-haspopup="menu" aria-expanded="false" aria-controls="cmp-cardlist-create-menu">
+                <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                    <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>Create card</span>
+                <svg class="cmp-cardlist__chevron" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+                    <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <ul class="cmp-splitbtn__menu" id="cmp-cardlist-create-menu" role="menu" aria-label="Create card" hidden>
+                <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-create-option="existing">Create card for existing employee</button></li>
+                <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-create-option="new">Create card for new employee</button></li>
+                <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-create-option="only">Create card only</button></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============ Toolbar: selection count + Update cards ============ -->
+    <div class="cmp-toolbar cmp-cardlist__toolbar" role="toolbar" aria-label="Bulk actions">
+        <span class="cmp-toolbar__selection" data-cmp-selection-count aria-live="polite">0 cards selected</span>
+        <button type="button" class="cmp-toolbar__action" data-cmp-update-cards disabled>
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+                <path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/>
+            </svg>
+            <span>Update cards</span>
+        </button>
+    </div>
+
+    <!-- ============ Cards table (rows server-rendered) ============ -->
+    <div class="cmp-datatable cmp-cardlist__table">
+        <table class="cmp-datatable__table" aria-labelledby="cmp-cardlist-title">
+            <thead>
+                <tr>
+                    <th scope="col" class="cmp-datatable__th cmp-datatable__th--check">
+                        <label class="cmp-visually-hidden" for="cmp-cardlist-selectall">Select all cards on this page</label>
+                        <input type="checkbox" id="cmp-cardlist-selectall" data-cmp-selectall/>
+                    </th>
+                    <th scope="col" class="cmp-datatable__th">Cardholder</th>
+                    <th scope="col" class="cmp-datatable__th">Account type</th>
+                    <th scope="col" class="cmp-datatable__th cmp-cardlist__num">Credit limit</th>
+                    <th scope="col" class="cmp-datatable__th">Card type</th>
+                    <th scope="col" class="cmp-datatable__th">Status</th>
+                    <th scope="col" class="cmp-datatable__th">Last updated</th>
+                    <th scope="col" class="cmp-datatable__th cmp-cardlist__details-col">Details</th>
+                </tr>
+            </thead>
+            <tbody data-cmp-tbody="cardlist">
+                <tr data-cmp-status="Active">
+                    <td>
+                        <label class="cmp-visually-hidden" for="cmp-row-bc">Select Benjamin Callins</label>
+                        <input type="checkbox" id="cmp-row-bc" data-cmp-rowcheck/>
+                    </td>
+                    <td>
+                        <div class="cmp-cardlist__holder">
+                            <span class="cmp-avatar" aria-hidden="true">BC</span>
+                            <span class="cmp-cardlist__name">
+                                <span class="cmp-cardlist__fullname">Benjamin Callins</span>
+                                <span class="cmp-cardlist__sub">1234</span>
+                            </span>
+                        </div>
+                    </td>
+                    <td>Corporate account</td>
+                    <td class="cmp-cardlist__num">500.00 USD</td>
+                    <td>Corporate card</td>
+                    <td><span class="cmp-pill cmp-pill--active"><span class="cmp-pill__label">Active</span></span></td>
+                    <td>10/20/2025</td>
+                    <td class="cmp-cardlist__details-col">
+                        <a href="#" class="cmp-cardlist__detail" aria-label="View Benjamin Callins details">
+                            <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false">
+                                <path d="M4 1l5 5-5 5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                <tr data-cmp-status="Active">
+                    <td>
+                        <label class="cmp-visually-hidden" for="cmp-row-cd">Select Charlie Dimmock</label>
+                        <input type="checkbox" id="cmp-row-cd" data-cmp-rowcheck/>
+                    </td>
+                    <td>
+                        <div class="cmp-cardlist__holder">
+                            <span class="cmp-avatar" aria-hidden="true">CD</span>
+                            <span class="cmp-cardlist__name">
+                                <span class="cmp-cardlist__fullname">Charlie Dimmock</span>
+                                <span class="cmp-cardlist__sub">2345</span>
+                            </span>
+                        </div>
+                    </td>
+                    <td>Corporate account</td>
+                    <td class="cmp-cardlist__num">2,000.00 USD</td>
+                    <td>Corporate card</td>
+                    <td><span class="cmp-pill cmp-pill--active"><span class="cmp-pill__label">Active</span></span></td>
+                    <td>10/20/2025</td>
+                    <td class="cmp-cardlist__details-col">
+                        <a href="#" class="cmp-cardlist__detail" aria-label="View Charlie Dimmock details">
+                            <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" focusable="false">
+                                <path d="M4 1l5 5-5 5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="cmp-cardlist__empty" data-cmp-cardlist-empty hidden>No cards match the selected filter.</p>
+    </div>
+
+    <!-- Side drawer: Search for an employee -->
+    <div class="cmp-drawer" data-cmp-empsearch-drawer hidden>
+        <div class="cmp-drawer__backdrop" aria-hidden="true"></div>
+        <aside class="cmp-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cmp-empsearch-title" tabindex="-1">
+            <header class="cmp-drawer__header">
+                <button type="button" class="cmp-drawer__close" data-cmp-empsearch-close aria-label="Close employee search">
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="cmp-drawer__title" id="cmp-empsearch-title">Search for an employee</h2>
+            </header>
+            <div class="cmp-drawer__body">
+                <div class="cmp-empsel">
+                    <label class="cmp-visually-hidden" for="cmp-empsearch-input">Search by name or ID</label>
+                    <div class="cmp-empsel__search">
+                        <svg class="cmp-empsel__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <input type="search" id="cmp-empsearch-input" class="cmp-empsel__input"
+                               autocomplete="off" aria-expanded="false" aria-controls="cmp-empsearch-list"
+                               aria-autocomplete="list" role="combobox" data-cmp-empsearch-input/>
+                        <svg class="cmp-empsel__chev" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+                            <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <ul class="cmp-empsel__list" id="cmp-empsearch-list" role="listbox" data-cmp-empsearch-results aria-live="polite"></ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Side drawer: Create Card form (pre-filled from selected employee) -->
+    <div class="cmp-drawer cmp-drawer--wide" data-cmp-createcard-drawer hidden>
+        <div class="cmp-drawer__backdrop" aria-hidden="true"></div>
+        <aside class="cmp-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cmp-createcard-title" tabindex="-1">
+            <header class="cmp-drawer__header">
+                <button type="button" class="cmp-drawer__close" data-cmp-createcard-close aria-label="Close create card form">
+                    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="cmp-drawer__title" id="cmp-createcard-title">Create Card</h2>
+            </header>
+            <form class="cmp-form cmp-drawer__body" novalidate data-cmp-createcard-form>
+                <p class="cmp-form__error" role="alert" aria-live="assertive" hidden data-cmp-form-error></p>
+
+                <h3 class="cmp-form__section">Company</h3>
+                <div class="cmp-form__grid">
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-companyid">Company ID</label>
+                        <input type="text" id="cf-companyid" name="companyId" class="cmp-field__input" value="200103" readonly/>
+                    </div>
+                    <div class="cmp-field cmp-field--btn-right">
+                        <button type="button" class="cmp-btn cmp-btn--ghost">Select template</button>
+                    </div>
+                </div>
+
+                <h3 class="cmp-form__section">Cardholder details</h3>
+                <div class="cmp-form__grid">
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-firstname">First name <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-firstname" name="firstName" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-firstname-err" data-cmp-field="firstName"/>
+                        <p class="cmp-field__err" id="cf-firstname-err" hidden>First name is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-lastname">Last name <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-lastname" name="lastName" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-lastname-err" data-cmp-field="lastName"/>
+                        <p class="cmp-field__err" id="cf-lastname-err" hidden>Last name is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-cardname">Cardholder name (required)</label>
+                        <input type="text" id="cf-cardname" name="cardholderName" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-cardname-err" data-cmp-field="cardholderName"/>
+                        <p class="cmp-field__err" id="cf-cardname-err" hidden>Cardholder name is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-companyname">Company name <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-companyname" name="companyName" class="cmp-field__input" aria-errormessage="cf-companyname-err" data-cmp-field="companyName"/>
+                        <p class="cmp-field__err" id="cf-companyname-err" hidden>Company name is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-homephone">Home Phone</label>
+                        <input type="tel" id="cf-homephone" name="homePhone" class="cmp-field__input"/>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-workphone">Work phone <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-workphone" name="workPhone" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-workphone-err" data-cmp-field="workPhone"/>
+                        <p class="cmp-field__err" id="cf-workphone-err" hidden>Work phone is required.</p>
+                    </div>
+                    <div class="cmp-toggle cmp-form__toggle-row">
+                        <label class="cmp-toggle__label" for="cf-physical">Physical Card</label>
+                        <input type="checkbox" role="switch" id="cf-physical" name="physicalCard" class="cmp-toggle__input" checked/>
+                        <span class="cmp-toggle__switch" aria-hidden="true"></span>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-control">Control account</label>
+                        <select id="cf-control" name="controlAccount" class="cmp-field__select">
+                            <option value="">Please select…</option>
+                            <option value="General">General</option>
+                            <option value="Executive">Executive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h3 class="cmp-form__section">Cardholder address</h3>
+                <div class="cmp-form__grid">
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-addrsearch">Address Search</label>
+                        <input type="search" id="cf-addrsearch" name="addressSearch" class="cmp-field__input"/>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-addr1">Address Line 1 <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-addr1" name="addressLine1" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-addr1-err" data-cmp-field="addressLine1"/>
+                        <p class="cmp-field__err" id="cf-addr1-err" hidden>Address Line 1 is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-addr2">Address Line 2 (Optional)</label>
+                        <input type="text" id="cf-addr2" name="addressLine2" class="cmp-field__input"/>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-city">City <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-city" name="city" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-city-err" data-cmp-field="city"/>
+                        <p class="cmp-field__err" id="cf-city-err" hidden>City is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-state">State <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-state" name="state" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-state-err" data-cmp-field="state"/>
+                        <p class="cmp-field__err" id="cf-state-err" hidden>State is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-zip">ZIP code <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="text" id="cf-zip" name="zip" class="cmp-field__input" required aria-required="true" aria-errormessage="cf-zip-err" data-cmp-field="zip"/>
+                        <p class="cmp-field__err" id="cf-zip-err" hidden>ZIP code is required.</p>
+                    </div>
+                </div>
+
+                <h3 class="cmp-form__section">Account limits</h3>
+                <div class="cmp-form__grid">
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-creditlimit">Credit limit <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <input type="number" id="cf-creditlimit" name="creditLimit" class="cmp-field__input" min="0" step="0.01" required aria-required="true" aria-errormessage="cf-creditlimit-err" data-cmp-field="creditLimit"/>
+                        <p class="cmp-field__err" id="cf-creditlimit-err" hidden>Credit limit is required.</p>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-cashlimit">Cash advance limit</label>
+                        <input type="number" id="cf-cashlimit" name="cashAdvanceLimit" class="cmp-field__input" min="0" step="0.01"/>
+                    </div>
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-authstrat">Authorization strategy <span class="cmp-field__req" aria-hidden="true">*</span></label>
+                        <select id="cf-authstrat" name="authStrategy" class="cmp-field__select" required aria-required="true" aria-errormessage="cf-authstrat-err" data-cmp-field="authStrategy">
+                            <option value="">Please select…</option>
+                            <option value="Cash Blocked">Cash Blocked</option>
+                            <option value="Standard">Standard</option>
+                        </select>
+                        <p class="cmp-field__err" id="cf-authstrat-err" hidden>Please choose an authorization strategy.</p>
+                    </div>
+                </div>
+
+                <h3 class="cmp-form__section">Additional information</h3>
+                <div class="cmp-form__grid cmp-form__grid--full">
+                    <div class="cmp-field">
+                        <label class="cmp-field__label" for="cf-comments">Comments</label>
+                        <textarea id="cf-comments" name="comments" class="cmp-field__textarea" maxlength="500" rows="3"></textarea>
+                        <p class="cmp-field__hint" aria-live="polite"><span data-cmp-charcount>500</span> characters left.</p>
+                    </div>
+                </div>
+
+                <footer class="cmp-form__actions">
+                    <button type="submit" class="cmp-btn cmp-btn--primary">Submit</button>
+                    <button type="button" class="cmp-btn cmp-btn--ghost">Save template</button>
+                    <button type="reset" class="cmp-btn cmp-btn--ghost">Reset</button>
+                </footer>
+            </form>
+        </aside>
+    </div>
+
+    <!-- Success toast (hidden by default; JS reveals on submit) -->
+    <div class="cmp-toast cmp-toast--success" role="status" aria-live="polite" data-cmp-toast hidden>
+        <span class="cmp-toast__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.15"/>
+                <path d="M8 12l3 3 5-6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <p class="cmp-toast__text" data-cmp-toast-text>Card created.</p>
+        <button type="button" class="cmp-toast__close" data-cmp-toast-close aria-label="Dismiss notification">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+</section>

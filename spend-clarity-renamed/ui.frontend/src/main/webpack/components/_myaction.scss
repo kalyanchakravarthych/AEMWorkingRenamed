@@ -1,0 +1,164 @@
+/* ---------- Block ---------- */
+.cmp-my-actions {
+    --cmp-my-actions-panel-bg: #d6d7db;
+    --cmp-my-actions-header-bg: #c4c6ca;
+    --cmp-my-actions-heading: #5b5d61;
+    --cmp-my-actions-link: #1a1f71;
+    --cmp-my-actions-gold: #c39a33;
+    --cmp-my-actions-badge: #a3215f;
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 520px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ---------- Panel ---------- */
+.cmp-my-actions__panel {
+    box-sizing: border-box;
+    background: var(--cmp-my-actions-panel-bg);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    overflow: hidden;
+}
+
+.cmp-my-actions__title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0;
+    padding: 26px 44px 24px;
+    background: var(--cmp-my-actions-header-bg);
+    border-bottom: 2px solid #b7b9bd;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cmp-my-actions-heading);
+    line-height: 1;
+}
+
+.cmp-my-actions__title-icon {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+}
+
+.cmp-my-actions__body {
+    padding: 38px 30px 30px;
+}
+
+/* ---------- Primary button ---------- */
+.cmp-my-actions__button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 6px;
+    background: var(--cmp-my-actions-gold);
+    color: #000;
+    font-size: 22px;
+    text-decoration: none;
+    transition: filter .15s;
+}
+
+.cmp-my-actions__button:hover,
+.cmp-my-actions__button:focus-visible {
+    filter: brightness(1.08);
+}
+
+.cmp-my-actions__button-icon {
+    width: 26px;
+    height: 26px;
+    fill: #000;
+}
+
+/* ---------- Link list ---------- */
+.cmp-my-actions__list {
+    margin: 0;
+    padding: 20px 30px 26px;
+    list-style: none;
+}
+
+.cmp-my-actions__item {
+    margin: 0;
+    padding: 0;
+}
+
+.cmp-my-actions__link {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-height: 60px;
+    padding: 0 8px;
+    color: var(--cmp-my-actions-link);
+    font-size: 22px;
+    text-decoration: none;
+}
+
+.cmp-my-actions__link:hover .cmp-my-actions__label,
+.cmp-my-actions__link:focus-visible .cmp-my-actions__label {
+    text-decoration: underline;
+}
+
+.cmp-my-actions__link-icon {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    fill: currentColor;
+}
+
+.cmp-my-actions__label {
+    flex: 1;
+}
+
+.cmp-my-actions__badge {
+    box-sizing: border-box;
+    min-width: 30px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    background: var(--cmp-my-actions-badge);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+}
+
+/* ---------- Text ---------- */
+.cmp-my-actions__text {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.5;
+    color: #000;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .cmp-my-actions__title {
+        padding: 18px 20px;
+        font-size: 22px;
+        gap: 14px;
+    }
+
+    .cmp-my-actions__body {
+        padding: 20px 16px;
+    }
+
+    .cmp-my-actions__list {
+        padding: 12px 16px 16px;
+    }
+
+    .cmp-my-actions__button,
+    .cmp-my-actions__link {
+        font-size: 18px;
+    }
+
+    .cmp-my-actions__text {
+        font-size: 17px;
+    }
+}

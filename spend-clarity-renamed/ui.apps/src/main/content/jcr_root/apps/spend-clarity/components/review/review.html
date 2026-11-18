@@ -1,0 +1,10 @@
+<sly data-sly-test.titleText="${properties.title || 'Review and confirm'}"/>
+<section class="cmp-review" aria-labelledby="cmp-review-title">
+    <h3 class="cmp-review__title" id="cmp-review-title">${titleText}</h3>
+    <dl class="cmp-review__list">
+        <div class="cmp-review__row"><dt>Description</dt><dd data-field="description">—</dd></div>
+        <div class="cmp-review__row"><dt>Spend limit</dt><dd data-field="spendLimit">—</dd></div>
+        <div class="cmp-review__row"><dt>Valid from</dt><dd data-field="startDate">—</dd></div>
+        <div class="cmp-review__row"><dt>Valid until</dt><dd data-field="endDate">—</dd></div>
+    </dl>
+</section>

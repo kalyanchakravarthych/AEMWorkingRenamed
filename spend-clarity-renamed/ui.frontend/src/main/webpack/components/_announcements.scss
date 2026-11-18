@@ -1,0 +1,99 @@
+/* ---------- Block ---------- */
+.cmp-announcements {
+    --cmp-announcements-panel-bg: #d6d7db;
+    --cmp-announcements-header-bg: #c4c6ca;
+    --cmp-announcements-heading: #5b5d61;
+    --cmp-announcements-rule: #bfc1c5;
+    --cmp-announcements-muted: #5b5d61;
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 520px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ---------- Panel ---------- */
+.cmp-announcements__panel {
+    box-sizing: border-box;
+    background: var(--cmp-announcements-panel-bg);
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .35);
+    overflow: hidden;
+}
+
+.cmp-announcements__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 26px 44px 24px;
+    background: var(--cmp-announcements-header-bg);
+    border-bottom: 2px solid #b7b9bd;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--cmp-announcements-heading);
+    line-height: 1;
+}
+
+.cmp-announcements__title-icon {
+    width: 34px;
+    height: 28px;
+    fill: currentColor;
+}
+
+.cmp-announcements__body {
+    padding: 44px 30px 30px;
+}
+
+/* ---------- Announcement item ---------- */
+.cmp-announcements__item {
+    padding-top: 26px;
+    border-top: 2px solid var(--cmp-announcements-rule);
+}
+
+.cmp-announcements__item+.cmp-announcements__item {
+    margin-top: 26px;
+}
+
+.cmp-announcements__item-title {
+    margin: 0 0 18px;
+    font-size: 21px;
+    font-weight: 700;
+    color: #333;
+}
+
+.cmp-announcements__item-text {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.5;
+    color: #000;
+}
+
+/* ---------- Footer ---------- */
+.cmp-announcements__last-visit {
+    margin: 30px 0 0;
+    font-size: 20px;
+    color: var(--cmp-announcements-muted);
+    text-align: center;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+    .cmp-announcements__title {
+        padding: 18px 20px;
+        font-size: 22px;
+    }
+
+    .cmp-announcements__body {
+        padding: 24px 16px 20px;
+    }
+
+    .cmp-announcements__item-title,
+    .cmp-announcements__item-text {
+        font-size: 17px;
+    }
+
+    .cmp-announcements__last-visit {
+        font-size: 16px;
+    }
+}

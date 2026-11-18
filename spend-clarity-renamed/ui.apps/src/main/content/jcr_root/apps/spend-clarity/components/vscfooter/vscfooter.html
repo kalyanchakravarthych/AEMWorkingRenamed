@@ -1,0 +1,16 @@
+<!--/* VSC Footer — Figma "Spend Clarity Demo FINAL".
+    Copyright on the left, Terms of Use and Privacy policy links on the right.
+    Text and links are authorable; an empty link field keeps the default "#". */-->
+<sly data-sly-test.termsHref="${properties.termsLink @ extension='html'}"/>
+<sly data-sly-test.privacyHref="${properties.privacyLink @ extension='html'}"/>
+<footer class="cmp-vfoot" id="${properties.id}">
+    <div class="cmp-vfoot__inner">
+        <p class="cmp-vfoot__copy">${properties.copyright || '© 2026 Visa Inc. All Rights Reserved.'}</p>
+        <nav class="cmp-vfoot__nav" aria-label="${properties.navLabel || 'Legal'}">
+            <ul class="cmp-vfoot__links">
+                <li><a class="cmp-vfoot__link" href="${termsHref || '#'}">${properties.termsText || 'Terms of Use'}</a></li>
+                <li><a class="cmp-vfoot__link" href="${privacyHref || '#'}">${properties.privacyText || 'Privacy policy'}</a></li>
+            </ul>
+        </nav>
+    </div>
+</footer>

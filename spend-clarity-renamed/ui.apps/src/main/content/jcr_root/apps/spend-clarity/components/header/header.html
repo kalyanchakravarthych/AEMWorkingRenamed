@@ -1,0 +1,165 @@
+<!--/*
+    Spend Clarity — Header (production).
+    Data: com.spend.sc.core.models.HeaderModel (dialog: General / Navigation / Login Fields).
+    Unauthored fields fall back to the Figma defaults so the header never renders empty.
+
+    Layout (Figma "Spend Clarity Demo FINAL"):
+      Row 1  VISA  Spend Clarity | Enterprise                     [Menu  < 900px]
+      Row 2  Home  My Spend ▾  Approvals  Cards  Virtual Cards ▾  Search  Reports ▾  Administration ▾   🔔1  👤 Stacey ▾
+    Active tab = 3px navy indicator on the TOP edge of the tab.
+
+    A11y (WAI-ARIA APG "Disclosure Navigation"):
+      - Items with nested links are <button aria-expanded>, never links-with-carets.
+      - Dropdowns are plain lists of links (no role="menu").
+      - IDs / aria-controls are assigned by _header.js, so no duplicate IDs.
+      - aria-current="page" marks the current page (top level and nested).
+*/-->
+<sly data-sly-use.header="com.spend.sc.core.models.HeaderModel"
+     data-sly-use.tpl="header-templates.html"/>
+<sly data-sly-test.title="${header.title || 'Spend Clarity'}"/>
+<sly data-sly-test.subtitle="${header.subtitle || 'Enterprise'}"/>
+<sly data-sly-test.userName="${header.userName || 'Stacey'}"/>
+<sly data-sly-test.pagePath="${currentPage.path}"/>
+<sly data-sly-test.pageName="${currentPage.name}"/>
+<!--/* Default Home / Cards / Virtual cards links are absolute page paths (siblings of this page)
+     so the AEM link checker can validate them; relative links are stripped on publish. */-->
+
+<header class="cmp-header" data-cmp-header>
+    <a class="cmp-header__skip" href="#main-content" data-cmp-header-skip>Skip to main content</a>
+
+    <!-- ============ Row 1: brand ============ -->
+    <div class="cmp-header__brand-bar">
+        <a href="${header.logoUrl}" class="cmp-header__brand">
+            <img data-sly-test="${header.logoImage}" class="cmp-header__logo"
+                 src="${header.logoImage}" alt="${header.logoAltText}" width="72" height="24" decoding="async"/>
+            <span data-sly-test="${!header.logoImage}" class="cmp-header__logo cmp-header__logo--default">VISA</span>
+            <span class="cmp-header__product">${title}</span>
+            <span class="cmp-header__divider" aria-hidden="true"></span>
+            <span class="cmp-header__edition">${subtitle}</span>
+            <span class="cmp-header__sr-only">, home</span>
+        </a>
+
+        <button type="button" class="cmp-header__menu-toggle" aria-expanded="false" data-cmp-header-toggle>
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="cmp-header__menu-label">Menu</span>
+        </button>
+    </div>
+
+    <!-- ============ Row 2: primary nav LEFT + utility RIGHT ============ -->
+    <div class="cmp-header__nav" data-cmp-header-panel>
+        <nav class="cmp-header__primary" aria-label="Primary">
+            <ul class="cmp-header__nav-list">
+
+                <!--/* Authored navigation */-->
+                <li data-sly-repeat.item="${header.navItems}" class="cmp-header__nav-item">
+                    <sly data-sly-test="${item.hasNestedItems}">
+                        <button type="button" class="cmp-header__nav-link" aria-expanded="false" data-cmp-header-trigger>
+                            <span>${item.text}</span>
+                            <sly data-sly-call="${tpl.caret}"/>
+                        </button>
+                        <ul class="cmp-header__subnav-list" hidden>
+                            <li data-sly-repeat.sub="${item.nestedNavItems}" class="cmp-header__subnav-item">
+                                <a href="${sub.url}" class="cmp-header__subnav-link"
+                                   data-sly-attribute.aria-current="${sub.link == pagePath ? 'page' : ''}">${sub.text}</a>
+                            </li>
+                        </ul>
+                    </sly>
+                    <a data-sly-test="${!item.hasNestedItems}" href="${item.url}"
+                       class="cmp-header__nav-link${item.link == pagePath ? ' cmp-header__nav-link--active' : ''}"
+                       data-sly-attribute.aria-current="${item.link == pagePath ? 'page' : ''}">${item.text}</a>
+                </li>
+
+                <!--/* Figma defaults when nothing is authored */-->
+                <sly data-sly-test="${!header.navItems}">
+                    <sly data-sly-test.siteRoot="${currentPage.parent.path}"/>
+                    <sly data-sly-test.isHome="${pageName == 'home' || pageName == 'en'}"/>
+                    <sly data-sly-test.isCards="${pageName == 'cards'}"/>
+                    <sly data-sly-test.isVirtual="${pageName == 'virtual-cards'}"/>
+                    <li class="cmp-header__nav-item">
+                        <a href="${siteRoot}.html" class="cmp-header__nav-link${isHome ? ' cmp-header__nav-link--active' : ''}"
+                           data-sly-attribute.aria-current="${isHome ? 'page' : ''}">Home</a>
+                    </li>
+                    <li class="cmp-header__nav-item">
+                        <sly data-sly-call="${tpl.disclosure @ label='My Spend', links=['My transactions', 'My expense reports']}"/>
+                    </li>
+                    <li class="cmp-header__nav-item"><a href="#" class="cmp-header__nav-link">Approvals</a></li>
+                    <li class="cmp-header__nav-item">
+                        <a href="${siteRoot}/cards.html" class="cmp-header__nav-link${isCards ? ' cmp-header__nav-link--active' : ''}"
+                           data-sly-attribute.aria-current="${isCards ? 'page' : ''}">Cards</a>
+                    </li>
+                    <li class="cmp-header__nav-item">
+                        <button type="button" class="cmp-header__nav-link" aria-expanded="false" data-cmp-header-trigger>
+                            <span>Virtual Cards</span>
+                            <sly data-sly-call="${tpl.caret}"/>
+                        </button>
+                        <ul class="cmp-header__subnav-list" hidden>
+                            <li class="cmp-header__subnav-item">
+                                <a href="${siteRoot}/virtual-cards.html" class="cmp-header__subnav-link"
+                                   data-sly-attribute.aria-current="${isVirtual ? 'page' : ''}">Virtual cards</a>
+                            </li>
+                            <li class="cmp-header__subnav-item"><a href="#" class="cmp-header__subnav-link">Virtual card requests</a></li>
+                        </ul>
+                    </li>
+                    <li class="cmp-header__nav-item"><a href="#" class="cmp-header__nav-link">Search</a></li>
+                    <li class="cmp-header__nav-item">
+                        <sly data-sly-call="${tpl.disclosure @ label='Reports', links=['Run a report', 'Scheduled reports']}"/>
+                    </li>
+                    <li class="cmp-header__nav-item">
+                        <sly data-sly-call="${tpl.disclosure @ label='Administration', links=['Users', 'Expense categories', 'Spend controls']}"/>
+                    </li>
+                </sly>
+            </ul>
+        </nav>
+
+        <ul class="cmp-header__utility">
+            <!--/* Notifications bell + red count badge (Figma). Count from the dialog, default 1;
+                 "0" shows the bell without a badge. Opens a small menu (disclosure pattern). */-->
+            <sly data-sly-test.notifCount="${header.notificationCount || '1'}"/>
+            <sly data-sly-test.hasUnread="${notifCount != '0'}"/>
+            <li class="cmp-header__nav-item cmp-header__nav-item--bell">
+                <button type="button" class="cmp-header__notifications" aria-expanded="false" data-cmp-header-trigger>
+                    <img data-sly-test="${header.bellIconImg}" class="cmp-header__notifications-icon"
+                         src="${header.bellIconImg}" alt="" width="20" height="20"/>
+                    <svg data-sly-test="${!header.bellIconImg}" class="cmp-header__notifications-icon"
+                         viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+                        <path d="M12 22a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22zm7-6V11a7 7 0 0 0-5.5-6.84V3.5a1.5 1.5 0 0 0-3 0v.66A7 7 0 0 0 5 11v5l-2 2v1h18v-1l-2-2z"/>
+                    </svg>
+                    <span class="cmp-header__sr-only">Notifications<sly data-sly-test="${hasUnread}">, ${notifCount} unread</sly></span>
+                    <span data-sly-test="${hasUnread}" class="cmp-header__badge" aria-hidden="true">${notifCount}</span>
+                </button>
+                <ul class="cmp-header__subnav-list cmp-header__subnav-list--end" hidden>
+                    <li class="cmp-header__subnav-item cmp-header__subnav-note">
+                        <sly data-sly-test="${hasUnread}">You have ${notifCount} unread notification<sly data-sly-test="${notifCount != '1'}">s</sly>.</sly>
+                        <sly data-sly-test="${!hasUnread}">No new notifications.</sly>
+                    </li>
+                    <li class="cmp-header__subnav-item"><a href="#" class="cmp-header__subnav-link">View all notifications</a></li>
+                </ul>
+            </li>
+
+            <!--/* Account menu: Login Fields from the dialog, or defaults */-->
+            <li class="cmp-header__nav-item">
+                <button type="button" class="cmp-header__nav-link cmp-header__user" aria-expanded="false" data-cmp-header-trigger>
+                    <img data-sly-test="${header.userIconImg}" class="cmp-header__user-icon"
+                         src="${header.userIconImg}" alt="" width="16" height="16"/>
+                    <svg data-sly-test="${!header.userIconImg}" class="cmp-header__user-icon"
+                         viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                        <path d="M12 12a4.5 4.5 0 100-9 4.5 4.5 0 000 9zm0 2c-4 0-8 2-8 5v2h16v-2c0-3-4-5-8-5z"/>
+                    </svg>
+                    <span class="cmp-header__user-name">${userName}<span class="cmp-header__sr-only">, account menu</span></span>
+                    <sly data-sly-call="${tpl.caret}"/>
+                </button>
+                <ul class="cmp-header__subnav-list cmp-header__subnav-list--end" hidden>
+                    <li data-sly-repeat.login="${header.loginFields}" class="cmp-header__subnav-item">
+                        <a href="${login.url}" class="cmp-header__subnav-link">${login.text}</a>
+                    </li>
+                    <sly data-sly-test="${!header.loginFields}">
+                        <li class="cmp-header__subnav-item"><a href="#" class="cmp-header__subnav-link">Profile settings</a></li>
+                        <li class="cmp-header__subnav-item"><a href="/system/sling/logout.html" class="cmp-header__subnav-link">Sign out</a></li>
+                    </sly>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</header>

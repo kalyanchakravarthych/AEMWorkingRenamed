@@ -1,0 +1,18 @@
+<sly data-sly-test.labelText="${properties.label || 'Search for an employee'}"/>
+<div class="cmp-empsel" data-cmp-empsel>
+    <label class="cmp-field__label" for="cmp-empsel-input">${labelText}</label>
+    <div class="cmp-empsel__search">
+        <svg class="cmp-empsel__icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+            <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="search" id="cmp-empsel-input" class="cmp-empsel__input"
+               autocomplete="off" placeholder=""
+               aria-expanded="false" aria-controls="cmp-empsel-list"
+               aria-autocomplete="list" role="combobox"/>
+        <svg class="cmp-empsel__chev" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+            <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+    <ul class="cmp-empsel__list" id="cmp-empsel-list" role="listbox" aria-live="polite"></ul>
+</div>

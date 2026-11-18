@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    jcr:description="Guided demo journey: chapters menu (bottom left), step popovers with Back / Next and hotspots across Home, Cards, Virtual Cards, Expense Categories and Code Expenses. Add it to every demo page (or the page template)."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Guided Journey"
+    componentGroup="VSC - Dashboard"/>

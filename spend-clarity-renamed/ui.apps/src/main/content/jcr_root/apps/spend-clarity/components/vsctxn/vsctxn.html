@@ -1,0 +1,69 @@
+<!--/* VSC Transactions — Figma "Spend Clarity Demo FINAL" › Home (Administrator dashboard).
+    Optional section heading (e.g. ADMINISTRATOR), Transactions card with Show + Recent Periods
+    filters (reused dropdown template), Total / Coding Required / Pending Approval gauges,
+    Transactions / Debit / Credit totals and the "View full transaction summary" link.
+    Values are server-rendered for the default period; _vsctxn.js updates them on change. */-->
+<sly data-sly-use.dd="../dropdown/dropdown.html"/>
+<sly data-sly-test.section="${properties.sectionTitle || 'Administrator'}"/>
+<sly data-sly-test.summaryHref="${properties.summaryLink @ extension='html'}"/>
+<section class="cmp-vtxn" id="${properties.id}" data-cmp-vtxn aria-labelledby="cmp-vtxn-title">
+    <h2 data-sly-test="${section != 'none'}" class="cmp-vtxn__section">${section}</h2>
+    <div class="cmp-vtxn__card">
+        <div class="cmp-vtxn__head">
+            <h3 class="cmp-vtxn__title" id="cmp-vtxn-title">${properties.title || 'Transactions'}</h3>
+            <p class="cmp-vtxn__range" data-cmp-vtxn-range>05/01/2026 to 05/31/2026</p>
+        </div>
+        <div class="cmp-vtxn__body">
+            <div class="cmp-vtxn__show">
+                <sly data-sly-call="${dd.field @ id='cmp-vtxn-scope', name='scope', label='Show', variant='inset',
+                                       options=['All requests', 'My requests'], value='All requests'}"/>
+            </div>
+
+            <dl class="cmp-vtxn__gauges">
+                <div class="cmp-vtxn__metric">
+                    <dt>Total</dt>
+                    <dd data-cmp-vtxn="total">1</dd>
+                </div>
+                <div class="cmp-vtxn__metric cmp-vtxn__metric--gauge">
+                    <svg class="cmp-vtxn__arc" viewBox="0 0 120 100" aria-hidden="true" focusable="false">
+                        <path class="cmp-vtxn__arc-track" d="M22 88 A50 50 0 1 1 98 88"/>
+                        <path class="cmp-vtxn__arc-fill" data-cmp-vtxn-arc="coding" d="M22 88 A50 50 0 1 1 98 88"
+                              pathLength="100" stroke-dasharray="0 100"/>
+                    </svg>
+                    <dt>Coding Required</dt>
+                    <dd data-cmp-vtxn="coding">0</dd>
+                </div>
+                <div class="cmp-vtxn__metric cmp-vtxn__metric--gauge">
+                    <svg class="cmp-vtxn__arc" viewBox="0 0 120 100" aria-hidden="true" focusable="false">
+                        <path class="cmp-vtxn__arc-track" d="M22 88 A50 50 0 1 1 98 88"/>
+                        <path class="cmp-vtxn__arc-fill" data-cmp-vtxn-arc="pending" d="M22 88 A50 50 0 1 1 98 88"
+                              pathLength="100" stroke-dasharray="0 100"/>
+                    </svg>
+                    <dt>Pending Approval</dt>
+                    <dd data-cmp-vtxn="pending">0</dd>
+                </div>
+            </dl>
+
+            <dl class="cmp-vtxn__totals">
+                <div><dt>Transactions</dt><dd data-cmp-vtxn="txns">1</dd></div>
+                <div><dt>Debit (USD)</dt><dd data-cmp-vtxn="debit">1.00</dd></div>
+                <div><dt>Credit (USD)</dt><dd data-cmp-vtxn="credit">0.00</dd></div>
+            </dl>
+
+            <a class="cmp-vtxn__link" href="${summaryHref || '#'}">
+                <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                    <rect x="1.75" y="1.75" width="12.5" height="12.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M6 10l4-4M7 6h3v3" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                </svg>
+                <span>${properties.summaryText || 'View full transaction summary'}</span>
+            </a>
+
+            <div class="cmp-vtxn__period">
+                <sly data-sly-call="${dd.field @ id='cmp-vtxn-period', name='period', label='Recent Periods', variant='inset',
+                                       options=['05/01/2026 to 05/31/2026', '04/01/2026 to 04/30/2026', '03/01/2026 to 03/31/2026'],
+                                       value='05/01/2026 to 05/31/2026'}"/>
+            </div>
+            <p class="cmp-visually-hidden" aria-live="polite" data-cmp-vtxn-status></p>
+        </div>
+    </div>
+</section>

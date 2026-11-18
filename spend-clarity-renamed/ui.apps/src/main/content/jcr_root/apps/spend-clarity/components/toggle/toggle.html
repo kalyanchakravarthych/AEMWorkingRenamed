@@ -1,0 +1,10 @@
+<sly data-sly-test.labelText="${properties.label || 'Toggle'}"
+     data-sly-test.nameAttr="${properties.name || 'toggle'}"
+     data-sly-test.isChecked="${properties.checked || false}"
+     data-sly-test.inputId="${properties.inputId || 'cmp-tog'}"/>
+<div class="cmp-toggle">
+    <label class="cmp-toggle__label" for="${inputId}">${labelText}</label>
+    <input type="checkbox" role="switch" id="${inputId}" name="${nameAttr}" class="cmp-toggle__input"
+           data-sly-attribute.checked="${isChecked}"/>
+    <span class="cmp-toggle__switch" aria-hidden="true"></span>
+</div>

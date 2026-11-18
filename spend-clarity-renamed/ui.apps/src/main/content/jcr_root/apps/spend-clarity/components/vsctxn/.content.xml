@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    jcr:description="Home dashboard: section heading, Transactions card with Show and Recent Periods filters, gauges and totals."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Transactions"
+    componentGroup="VSC - Dashboard"/>

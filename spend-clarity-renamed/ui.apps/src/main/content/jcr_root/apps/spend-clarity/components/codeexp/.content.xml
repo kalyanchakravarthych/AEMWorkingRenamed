@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    jcr:description="Code Expenses &amp; Attach Receipts: Show, Filters, Find, coding panel (splits, Cost Center / GL Account / Project), Image Linking. Place in the right column of the VSC Expenses Two Column Grid."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Code Expenses"
+    componentGroup="VSC - Search &amp; Data"/>

@@ -1,0 +1,34 @@
+<!--/* VSC Date Input — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.date="../dateinput/dateinput.html"
+                 data-sly-call="${date.field @ id='start', name='startDate', label='Start date', required=true, picker=true}"/>
+    Arguments: id, name, label, required, value, min, max, errorText,
+               picker (adds a "Choose date" button that opens the native picker),
+               variant ('inset' = label inside the box).
+    Native <input type="date"> keeps keyboard entry and screen reader support. */-->
+<template data-sly-template.field="${@ id, name, label, required, value, min, max, errorText, picker, variant}">
+    <sly data-sly-test.fieldId="${id || 'cmp-date'}"/>
+    <sly data-sly-test.labelText="${label || 'Date'}"/>
+    <div class="cmp-field cmp-field--date${variant == 'inset' ? ' cmp-field--inset' : ''}${picker ? ' cmp-field--picker' : ''}">
+        <div class="cmp-field__box">
+            <label class="cmp-field__label" for="${fieldId}">${labelText}<span data-sly-test="${required}"
+                    class="cmp-field__req" aria-hidden="true">*</span></label>
+            <input type="date" id="${fieldId}" name="${name || 'date'}" class="cmp-field__input"
+                   value="${value}" min="${min}" max="${max}"
+                   aria-describedby="${fieldId}-err"
+                   data-sly-attribute.required="${required}"/>
+            <button data-sly-test="${picker}" type="button" class="cmp-field__picker"
+                    data-cmp-date-picker="${fieldId}" aria-label="Choose ${labelText}">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                    <rect x="3.5" y="5" width="17" height="15.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M7 13h2v2H7zM11 13h2v2h-2zM15 13h2v2h-2zM7 16.5h2v2H7zM11 16.5h2v2h-2z" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+        <p class="cmp-field__err" id="${fieldId}-err" hidden>${errorText || 'Please enter a valid date.'}</p>
+    </div>
+</template>
+
+<!--/* Standalone */-->
+<sly data-sly-call="${field @ id=properties.inputId, name=properties.name, label=properties.label,
+                       required=properties.required}"/>

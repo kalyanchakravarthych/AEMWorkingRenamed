@@ -1,0 +1,44 @@
+<!--/* VSC Account Management — Figma "Spend Clarity Demo FINAL" › Home.
+    Rows (dialog multifield "Rows": label, link, unmapped, active). Without authored rows the
+    Figma defaults are shown: Requests 0/1, Big Bank 1 1/5, Cash Expenses 0/5. */-->
+<section class="cmp-vacct" id="${properties.id}" aria-labelledby="cmp-vacct-title">
+    <table class="cmp-vacct__table">
+        <thead>
+            <tr>
+                <th scope="col" class="cmp-vacct__title-cell"><h2 class="cmp-vacct__title" id="cmp-vacct-title">${properties.title || 'Account Management'}</h2></th>
+                <th scope="col" class="cmp-vacct__num">Unmapped</th>
+                <th scope="col" class="cmp-vacct__num">Active</th>
+            </tr>
+        </thead>
+        <tbody>
+            <sly data-sly-list.child="${resource.children}">
+                <sly data-sly-test="${child.name == 'rows'}">
+                    <sly data-sly-set.hasRows="${child.name == 'rows'}"/>
+                    <tr data-sly-repeat.row="${child.children}">
+                        <sly data-sly-test.rowHref="${row.valueMap.link @ extension='html'}"/>
+                        <th scope="row"><a class="cmp-vacct__link" href="${rowHref || '#'}">${row.valueMap.label}</a></th>
+                        <td class="cmp-vacct__num">${row.valueMap.unmapped || '0'}</td>
+                        <td class="cmp-vacct__num">${row.valueMap.active || '0'}</td>
+                    </tr>
+                </sly>
+            </sly>
+            <sly data-sly-test="${!hasRows}">
+                <tr>
+                    <th scope="row"><a class="cmp-vacct__link" href="#">Requests</a></th>
+                    <td class="cmp-vacct__num">0</td>
+                    <td class="cmp-vacct__num">1</td>
+                </tr>
+                <tr>
+                    <th scope="row"><a class="cmp-vacct__link" href="#">Big Bank 1</a></th>
+                    <td class="cmp-vacct__num">1</td>
+                    <td class="cmp-vacct__num">5</td>
+                </tr>
+                <tr>
+                    <th scope="row"><a class="cmp-vacct__link" href="#">Cash Expenses</a></th>
+                    <td class="cmp-vacct__num">0</td>
+                    <td class="cmp-vacct__num">5</td>
+                </tr>
+            </sly>
+        </tbody>
+    </table>
+</section>

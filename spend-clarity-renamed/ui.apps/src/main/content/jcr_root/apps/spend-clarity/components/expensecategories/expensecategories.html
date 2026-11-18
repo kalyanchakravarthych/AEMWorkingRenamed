@@ -1,0 +1,224 @@
+<!--/* VSC Expense Categories — Figma "Spend Clarity Demo FINAL" › Manage Expense Categories (Charge Codes).
+    Full-width page component: place it in a full-width Layout Container under the header.
+
+    Reuses the catalog components through their HTL template libraries:
+      searchctrl (search), dropdown (Type, filters, radios, multi-select chips),
+      txtinput (Value, Description, Advanced Description), toast (Success).
+
+    Toolbar: Search (toggles the filter bar) · Create (dialog) · Group Action (for the
+    selected rows) · Export (Excel .xlsx, CSV, PDF, PNG image) · column chooser · pager.
+    Rows: edit (same dialog, prefilled) and view details (read-only dialog).
+    The default codes are server-rendered (visible in the AEM editor and without JS).
+    All data is in-memory; refreshing the page restores the defaults. */-->
+<sly data-sly-use.sc="../searchctrl/searchctrl.html"
+     data-sly-use.dd="../dropdown/dropdown.html"
+     data-sly-use.txt="../txtinput/txtinput.html"
+     data-sly-use.toast="../toast/toast.html"/>
+
+<!--/* One server-rendered table row (same markup the script builds for new codes). */-->
+<template data-sly-template.row="${@ value, type, desc}">
+    <tr data-cmp-expcat-row data-value="${value}" data-type="${type}" data-status="Active" data-groups="All Codes">
+        <td class="cmp-expcat__check"><input type="checkbox" data-cmp-expcat-rowcheck aria-label="Select ${value}"/></td>
+        <td data-col="value" class="cmp-expcat__value">${value}</td>
+        <td data-col="type">${type}</td>
+        <td data-col="description">${desc}</td>
+        <td data-col="groups">1</td>
+        <td class="cmp-expcat__actions">
+            <button type="button" class="cmp-expcat__icon" data-cmp-expcat-edit aria-label="Edit ${value}">
+                <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false">
+                    <path d="M11.3 1.7l3 3-8.6 8.6-3.9.9.9-3.9z" fill="currentColor"/>
+                </svg>
+            </button>
+            <button type="button" class="cmp-expcat__icon" data-cmp-expcat-view aria-label="View ${value} details">
+                <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true" focusable="false">
+                    <rect x="2.5" y="1.5" width="11" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+            </button>
+        </td>
+    </tr>
+</template>
+
+<sly data-sly-test.pageSize="${properties.pageSize || 25}"/>
+<section class="cmp-expcat" id="${properties.id}" data-cmp-expcat data-cmp-expcat-page-size="${pageSize}"
+         aria-labelledby="cmp-expcat-title">
+    <div class="cmp-expcat__panel">
+        <h1 class="cmp-expcat__title" id="cmp-expcat-title">${properties.title || 'Charge Codes'}</h1>
+
+        <!-- ============ Toolbar ============ -->
+        <div class="cmp-expcat__toolbar">
+            <div class="cmp-expcat__tools" role="group" aria-label="Charge code actions">
+                <button type="button" class="cmp-expcat__tbtn" data-cmp-expcat-search-toggle
+                        aria-expanded="false" aria-controls="cmp-expcat-search">
+                    <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+                        <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.75"/>
+                        <path d="M20 20l-4.5-4.5" stroke="currentColor" stroke-width="2.75" stroke-linecap="round"/>
+                    </svg>
+                    <span>Search</span>
+                </button>
+                <button type="button" class="cmp-expcat__tbtn" data-cmp-expcat-create aria-haspopup="dialog">
+                    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                        <circle cx="8" cy="8" r="8" fill="#2e7d32"/>
+                        <path d="M8 4.5v7M4.5 8h7" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Create</span>
+                </button>
+                <div class="cmp-expcat__menuwrap">
+                    <button type="button" class="cmp-expcat__tbtn" data-cmp-expcat-menu="group" id="cmp-expcat-group-btn"
+                            aria-haspopup="menu" aria-expanded="false" aria-controls="cmp-expcat-group-menu"
+                            aria-describedby="cmp-expcat-selection" disabled>
+                        <span>Group Action</span>
+                        <svg viewBox="0 0 10 6" width="7" height="5" aria-hidden="true" focusable="false"><path d="M0 0h10L5 6z" fill="currentColor"/></svg>
+                    </button>
+                    <ul class="cmp-expcat__menu" id="cmp-expcat-group-menu" role="menu" aria-labelledby="cmp-expcat-group-btn" hidden>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="add:Travel &amp; Entertainment">Add to Travel &amp; Entertainment</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="add:Office">Add to Office</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="add:Technology">Add to Technology</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="reset">Reset to All Codes only</button></li>
+                        <li role="separator"></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="status:Active">Mark as active</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="status:Inactive">Mark as inactive</button></li>
+                        <li role="separator"></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-group="delete">Delete</button></li>
+                    </ul>
+                </div>
+                <div class="cmp-expcat__menuwrap">
+                    <button type="button" class="cmp-expcat__tbtn" data-cmp-expcat-menu="export" id="cmp-expcat-export-btn"
+                            aria-haspopup="menu" aria-expanded="false" aria-controls="cmp-expcat-export-menu">
+                        <span>Export</span>
+                        <svg viewBox="0 0 10 6" width="7" height="5" aria-hidden="true" focusable="false"><path d="M0 0h10L5 6z" fill="currentColor"/></svg>
+                    </button>
+                    <ul class="cmp-expcat__menu" id="cmp-expcat-export-menu" role="menu" aria-labelledby="cmp-expcat-export-btn" hidden>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-export="xlsx">Excel (.xlsx)</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-export="csv">CSV (.csv)</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-export="pdf">PDF (.pdf)</button></li>
+                        <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-expcat-export="png">Image (.png)</button></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cmp-expcat__tools cmp-expcat__tools--end" role="group" aria-label="View options">
+                <div class="cmp-expcat__menuwrap">
+                    <button type="button" class="cmp-expcat__tbtn cmp-expcat__tbtn--icon" data-cmp-expcat-columns-btn
+                            aria-label="Show or hide columns" aria-expanded="false" aria-controls="cmp-expcat-columns">
+                        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                            <path d="M2 2h3v12H2zM6.5 2h3v12h-3zM11 2h3v12h-3z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <fieldset class="cmp-expcat__popover" id="cmp-expcat-columns" hidden>
+                        <legend class="cmp-expcat__popover-title">Columns</legend>
+                        <label><input type="checkbox" value="type" checked data-cmp-expcat-col/> Type</label>
+                        <label><input type="checkbox" value="description" checked data-cmp-expcat-col/> Description</label>
+                        <label><input type="checkbox" value="groups" checked data-cmp-expcat-col/> Group(s)</label>
+                    </fieldset>
+                </div>
+                <nav class="cmp-expcat__pager" aria-label="Charge codes pagination">
+                    <button type="button" class="cmp-expcat__tbtn cmp-expcat__tbtn--icon" data-cmp-expcat-prev aria-label="Previous page" disabled>
+                        <svg viewBox="0 0 6 10" width="5" height="8" aria-hidden="true" focusable="false"><path d="M6 0v10L0 5z" fill="currentColor"/></svg>
+                    </button>
+                    <label class="cmp-visually-hidden" for="cmp-expcat-page">Page</label>
+                    <select id="cmp-expcat-page" class="cmp-expcat__page" data-cmp-expcat-page>
+                        <option value="1">Page 1</option>
+                    </select>
+                    <span class="cmp-expcat__pagecount" data-cmp-expcat-pagecount>of 1</span>
+                    <button type="button" class="cmp-expcat__tbtn cmp-expcat__tbtn--icon" data-cmp-expcat-next aria-label="Next page" disabled>
+                        <svg viewBox="0 0 6 10" width="5" height="8" aria-hidden="true" focusable="false"><path d="M0 0v10l6-5z" fill="currentColor"/></svg>
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- ============ Search / filter bar (Search button) ============ -->
+        <div class="cmp-expcat__searchbar" id="cmp-expcat-search" role="search" aria-label="Charge codes" hidden>
+            <div class="cmp-expcat__searchfield">
+                <sly data-sly-call="${sc.search @ id='cmp-expcat-q', label='Search charge codes', placeholder='Search value or description'}"/>
+            </div>
+            <sly data-sly-call="${dd.field @ id='cmp-expcat-ftype', name='filterType', label='Type', variant='inline',
+                                   options=['GL Account', 'Cost Center'], placeholder='All types'}"/>
+            <sly data-sly-call="${dd.field @ id='cmp-expcat-fstatus', name='filterStatus', label='Status', variant='inline',
+                                   options=['Active', 'Inactive'], placeholder='All statuses'}"/>
+            <button type="button" class="cmp-expcat__tbtn" data-cmp-expcat-clear>Clear</button>
+        </div>
+        <p class="cmp-visually-hidden" id="cmp-expcat-selection" aria-live="polite" data-cmp-expcat-selection>No charge codes selected</p>
+        <p class="cmp-visually-hidden" aria-live="polite" data-cmp-expcat-status></p>
+
+        <!-- ============ Table ============ -->
+        <div class="cmp-expcat__table-wrap">
+            <table class="cmp-expcat__table" id="cmp-expcat-table" aria-labelledby="cmp-expcat-title">
+                <thead>
+                    <tr>
+                        <th scope="col" class="cmp-expcat__check">
+                            <input type="checkbox" data-cmp-expcat-selectall aria-label="Select all charge codes on this page"/>
+                        </th>
+                        <th scope="col" data-col="value">Value</th>
+                        <th scope="col" data-col="type">Type</th>
+                        <th scope="col" data-col="description">Description</th>
+                        <th scope="col" data-col="groups">Group(s)</th>
+                        <th scope="col" class="cmp-expcat__actions">Actions</th>
+                    </tr>
+                </thead>
+                <tbody data-cmp-expcat-tbody>
+                    <sly data-sly-call="${row @ value='500030', type='GL Account', desc='Meals - Individual'}"/>
+                    <sly data-sly-call="${row @ value='500040', type='GL Account', desc='Memberships/Associations'}"/>
+                    <sly data-sly-call="${row @ value='500060', type='GL Account', desc='Printing \u0026 Copying'}"/>
+                    <sly data-sly-call="${row @ value='500070', type='GL Account', desc='Retail/Other Supplies'}"/>
+                    <sly data-sly-call="${row @ value='500080', type='GL Account', desc='Salaries Expense'}"/>
+                    <sly data-sly-call="${row @ value='500090', type='GL Account', desc='Services'}"/>
+                    <sly data-sly-call="${row @ value='500110', type='GL Account', desc='Technology \u003C$5000'}"/>
+                    <sly data-sly-call="${row @ value='500120', type='GL Account', desc='Technology \u003E$5000'}"/>
+                    <sly data-sly-call="${row @ value='HUR', type='Cost Center', desc='Human Resources'}"/>
+                    <sly data-sly-call="${row @ value='ITI', type='Cost Center', desc='IT Integration'}"/>
+                    <sly data-sly-call="${row @ value='OPN', type='Cost Center', desc='Operations'}"/>
+                    <sly data-sly-call="${row @ value='PROD', type='Cost Center', desc='Product'}"/>
+                </tbody>
+            </table>
+            <p class="cmp-expcat__empty" data-cmp-expcat-empty hidden>No charge codes match your search.</p>
+        </div>
+    </div>
+
+    <!-- ============ Create / edit / view dialog ============ -->
+    <div class="cmp-expcat__modal" data-cmp-expcat-modal hidden>
+        <div class="cmp-expcat__backdrop" data-cmp-expcat-backdrop></div>
+        <div class="cmp-expcat__dialog" role="dialog" aria-modal="true" aria-labelledby="cmp-expcat-dialog-title" tabindex="-1">
+            <header class="cmp-expcat__dialog-head">
+                <span class="cmp-expcat__logo" aria-hidden="true">VISA</span>
+                <h2 class="cmp-expcat__dialog-title" id="cmp-expcat-dialog-title" data-cmp-expcat-dialog-title>Create New Charge Code</h2>
+                <button type="button" class="cmp-expcat__close" data-cmp-expcat-close aria-label="Close">
+                    <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false">
+                        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </header>
+            <form class="cmp-expcat__form" novalidate data-cmp-expcat-form>
+                <div class="cmp-expcat__form-body">
+                    <p class="cmp-form__error" role="alert" data-cmp-expcat-error hidden></p>
+                    <sly data-sly-call="${dd.field @ id='ecf-type', name='type', label='Type', required=true, variant='inline',
+                                           options=['GL Account', 'Cost Center'], placeholder='Select a type',
+                                           errorText='Choose a type.'}"/>
+                    <sly data-sly-call="${txt.field @ id='ecf-value', name='value', label='Value', required=true, variant='inline',
+                                           maxlength='20', errorText='Enter a unique value (letters and numbers).'}"/>
+                    <sly data-sly-call="${txt.field @ id='ecf-desc', name='description', label='Description', required=true,
+                                           variant='inline', maxlength='60', errorText='Enter a description.'}"/>
+                    <sly data-sly-call="${dd.radios @ name='status', label='Status', options=['Active', 'Inactive'],
+                                           value='Active', variant='inline'}"/>
+                    <sly data-sly-call="${txt.area @ id='ecf-adv', name='advancedDescription', label='Advanced Description',
+                                           rows=3, maxlength='500', variant='inline'}"/>
+                    <sly data-sly-call="${dd.multi @ id='ecf-groups', name='groups', label='Charge Group(s)', variant='inline',
+                                           options=['All Codes', 'Travel \u0026 Entertainment', 'Office', 'Technology'],
+                                           selected=['All Codes']}"/>
+                    <sly data-sly-call="${dd.field @ id='ecf-ptype', name='parentType', label='Parent Type', variant='inline',
+                                           options=['GL Account', 'Cost Center'], placeholder='None'}"/>
+                    <sly data-sly-call="${dd.field @ id='ecf-pvalue', name='parentValue', label='Parent Value(s)', variant='inline',
+                                           placeholder='Select a parent type first', disabled=true}"/>
+                </div>
+                <footer class="cmp-expcat__dialog-foot">
+                    <button type="submit" class="cmp-expcat__save" data-cmp-expcat-save>Save</button>
+                    <button type="button" class="cmp-expcat__cancel" data-cmp-expcat-cancel>Cancel</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <sly data-sly-call="${toast.toast @ type='success', hook='expcat', title='Success',
+                           message='Charge code successfully added.'}"/>
+</section>

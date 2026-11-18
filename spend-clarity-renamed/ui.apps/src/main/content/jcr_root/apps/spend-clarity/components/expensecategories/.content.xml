@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    jcr:description="Manage Expense Categories (Charge Codes): search, create/edit/view, group actions, export (Excel, CSV, PDF, image). Place in a full-width Layout Container under the header."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Expense Categories"
+    componentGroup="VSC - Search &amp; Data"/>

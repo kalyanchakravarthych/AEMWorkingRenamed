@@ -1,0 +1,10 @@
+<!--/* VSC Status Indicator (pill) — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.pill="../statuspill/statuspill.html"
+                 data-sly-call="${pill.pill @ status='active', label='Active'}"/>
+    Plain text, no live region: a status shown in a table must not be announced on load. */-->
+<template data-sly-template.pill="${@ status, label}">
+    <span class="cmp-pill cmp-pill--${status || 'active'}"><span class="cmp-pill__label">${label || 'Active'}</span></span>
+</template>
+
+<!--/* Standalone */-->
+<sly data-sly-call="${pill @ status=properties.status, label=properties.label}"/>

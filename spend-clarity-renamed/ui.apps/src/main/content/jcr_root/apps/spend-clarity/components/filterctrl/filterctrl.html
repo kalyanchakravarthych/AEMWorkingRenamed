@@ -1,0 +1,25 @@
+<sly data-sly-test.labelText="${properties.label || '1 filter applied'}"/>
+<div class="cmp-filter">
+    <button type="button" class="cmp-filter__trigger"
+            aria-haspopup="dialog" aria-expanded="false" aria-controls="cmp-filter-panel">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+            <path d="M3 5h18M6 11h12M10 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        ${labelText}
+        <svg viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+            <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <div class="cmp-filter__panel" id="cmp-filter-panel" role="dialog" aria-labelledby="cmp-filter-title" hidden>
+        <h3 class="cmp-filter__title" id="cmp-filter-title">Filter</h3>
+        <fieldset class="cmp-filter__group">
+            <legend class="cmp-filter__legend">Status</legend>
+            <label class="cmp-filter__check"><input type="checkbox" name="st" value="Active" checked/><span>Active</span></label>
+            <label class="cmp-filter__check"><input type="checkbox" name="st" value="Inactive"/><span>Inactive</span></label>
+        </fieldset>
+        <div class="cmp-filter__actions">
+            <button type="button" class="cmp-filter__clear">Clear</button>
+            <button type="button" class="cmp-filter__apply">Apply</button>
+        </div>
+    </div>
+</div>

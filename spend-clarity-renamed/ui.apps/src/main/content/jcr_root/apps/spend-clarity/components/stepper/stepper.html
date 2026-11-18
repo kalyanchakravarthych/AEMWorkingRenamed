@@ -1,0 +1,18 @@
+<sly data-sly-test.ariaLabel="${properties.ariaLabel || 'Wizard progress'}"/>
+<nav class="cmp-stepper" aria-label="${ariaLabel}">
+    <ol class="cmp-stepper__list">
+        <li class="cmp-stepper__step cmp-stepper__step--active" aria-current="step" data-step="1">
+            <span class="cmp-stepper__num" aria-hidden="true">1</span>
+            <span class="cmp-stepper__label">Details</span>
+        </li>
+        <li class="cmp-stepper__step" aria-current="false" data-step="2">
+            <span class="cmp-stepper__num" aria-hidden="true">2</span>
+            <span class="cmp-stepper__label">Employees</span>
+        </li>
+        <li class="cmp-stepper__step" aria-current="false" data-step="3">
+            <span class="cmp-stepper__num" aria-hidden="true">3</span>
+            <span class="cmp-stepper__label">Review</span>
+        </li>
+    </ol>
+    <p class="cmp-visually-hidden" aria-live="polite">Step 1 of 3</p>
+</nav>

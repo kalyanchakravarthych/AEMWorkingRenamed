@@ -1,0 +1,12 @@
+<sly data-sly-test.titleText="${properties.title || 'Form'}"/>
+<form class="cmp-form" novalidate aria-labelledby="cmp-form-title">
+    <h3 class="cmp-form__title" id="cmp-form-title">${titleText}</h3>
+    <p class="cmp-form__error" role="alert" aria-live="assertive" hidden></p>
+    <div class="cmp-form__body">
+        <sly data-sly-resource="${'content' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+    </div>
+    <div class="cmp-form__actions">
+        <button type="submit" class="cmp-btn cmp-btn--primary">Submit</button>
+        <button type="button" class="cmp-btn cmp-btn--ghost">Reset</button>
+    </div>
+</form>

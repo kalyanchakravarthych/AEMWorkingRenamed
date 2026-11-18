@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="VSC Expenses"
+    sling:resourceType="cq/gui/components/authoring/dialog">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns">
+        <items jcr:primaryType="nt:unstructured">
+            <column
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container">
+                <items jcr:primaryType="nt:unstructured">
+                    <sectionTitle
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to My Expenses."
+                        fieldLabel="Section heading"
+                        name="./sectionTitle"/>
+                    <cardName
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to Corporate Card."
+                        fieldLabel="Card name"
+                        name="./cardName"/>
+                    <cardNumber
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to ****-****-****-0003."
+                        fieldLabel="Masked card number"
+                        name="./cardNumber"/>
+                    <cardholder
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to Stacey Taylor."
+                        fieldLabel="Cardholder"
+                        name="./cardholder"/>
+                    <codingRequired
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to 0."
+                        fieldLabel="Coding Required"
+                        name="./codingRequired"/>
+                    <pendingApproval
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to 135."
+                        fieldLabel="Pending Approval"
+                        name="./pendingApproval"/>
+                    <currentBalance
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to 1,235.75."
+                        fieldLabel="Current Balance (USD)"
+                        name="./currentBalance"/>
+                    <availableCredit
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to 6,364.25."
+                        fieldLabel="Available Credit (USD)"
+                        name="./availableCredit"/>
+                    <id
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Optional HTML ID"
+                        fieldLabel="ID"
+                        name="./id"/>
+                </items>
+            </column>
+        </items>
+    </content>
+</jcr:root>

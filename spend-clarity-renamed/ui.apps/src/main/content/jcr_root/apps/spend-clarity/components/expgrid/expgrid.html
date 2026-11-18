@@ -1,0 +1,21 @@
+<!--/* VSC Expenses Two Column Grid — Figma "Spend Clarity Demo FINAL" › Expenses.
+    Two OOB Layout Containers (wcm/foundation/components/responsivegrid):
+      - Left  column: from the start of the page to the end of the header's
+                      "My spend" tab (2nd primary tab).
+      - Right column: content starts under the label of the 3rd primary tab
+                      ("Approvals" in the Figma; the tab that follows My spend).
+    _expgrid.scss holds fallbacks that match the default header; _expgrid.js
+    measures the live header and refines them (any font, label or width).
+    Below 900px (header collapses into its Menu button) the columns stack.
+    Nothing overrides .aem-Grid/.aem-GridColumn: Layout mode, policies and the
+    OOB placeholders work as usual inside both columns. */-->
+<div class="cmp-expgrid" id="${properties.id}" data-cmp-expgrid>
+    <div class="cmp-expgrid__inner">
+        <div class="cmp-expgrid__col cmp-expgrid__col--left">
+            <sly data-sly-resource="${'left-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+        <div class="cmp-expgrid__col cmp-expgrid__col--right">
+            <sly data-sly-resource="${'right-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+    </div>
+</div>

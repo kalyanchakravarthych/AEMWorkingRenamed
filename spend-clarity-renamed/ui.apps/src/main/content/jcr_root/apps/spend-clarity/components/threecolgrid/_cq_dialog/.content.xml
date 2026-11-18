@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="VSC Three Column Grid"
+    sling:resourceType="cq/gui/components/authoring/dialog">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/tabs"
+        maximized="{Boolean}true">
+        <items jcr:primaryType="nt:unstructured">
+            <layoutTab
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Layout"
+                sling:resourceType="granite/ui/components/coral/foundation/container"
+                margin="{Boolean}true">
+                <items jcr:primaryType="nt:unstructured">
+                    <columns
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns">
+                        <items jcr:primaryType="nt:unstructured">
+                            <column
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/container">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <alignTo
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/select"
+                                        fieldDescription="How the columns line up with the header tabs. 'Tab edges' uses the tab box boundaries; 'Tab text' uses the visible label boundaries."
+                                        fieldLabel="Align to"
+                                        name="./alignTo">
+                                        <items jcr:primaryType="nt:unstructured">
+                                            <tab
+                                                jcr:primaryType="nt:unstructured"
+                                                text="Tab edges (My Spend tab start to 'r' in Virtual Cards) - default"
+                                                value="tab"/>
+                                            <label
+                                                jcr:primaryType="nt:unstructured"
+                                                text="Tab text (My Spend text start to 'r' in Virtual Cards)"
+                                                value="label"/>
+                                        </items>
+                                    </alignTo>
+                                    <id
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Optional HTML ID for the grid container element."
+                                        fieldLabel="ID"
+                                        name="./id"/>
+                                </items>
+                            </column>
+                        </items>
+                    </columns>
+                </items>
+            </layoutTab>
+            <accessibilityTab
+                jcr:primaryType="nt:unstructured"
+                jcr:title="Accessibility"
+                sling:resourceType="granite/ui/components/coral/foundation/container"
+                margin="{Boolean}true">
+                <items jcr:primaryType="nt:unstructured">
+                    <columns
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns">
+                        <items jcr:primaryType="nt:unstructured">
+                            <column
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/container">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <roleHelp
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/text"
+                                        text="&lt;p&gt;Assign an ARIA landmark role so screen-reader users can jump directly to this section with their landmark shortcut. If you pick a role, you MUST also set the ARIA label field below so the landmark has a meaningful name.&lt;/p&gt;"/>
+                                    <role
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/select"
+                                        fieldDescription="None (default) = no landmark; the grid is treated as presentational. Use 'region' for a generic named section, 'complementary' for supporting sidebar-style content, 'main' only when this grid IS the page's primary content (and no other main landmark exists)."
+                                        fieldLabel="ARIA role"
+                                        name="./role">
+                                        <items jcr:primaryType="nt:unstructured">
+                                            <none
+                                                jcr:primaryType="nt:unstructured"
+                                                text="None (default - no landmark)"
+                                                value=""/>
+                                            <region
+                                                jcr:primaryType="nt:unstructured"
+                                                text="region - generic named section"
+                                                value="region"/>
+                                            <complementary
+                                                jcr:primaryType="nt:unstructured"
+                                                text="complementary - supporting / sidebar"
+                                                value="complementary"/>
+                                            <main
+                                                jcr:primaryType="nt:unstructured"
+                                                text="main - page's primary content (only ONE per page)"
+                                                value="main"/>
+                                        </items>
+                                    </role>
+                                    <ariaLabel
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Short human-readable name for the landmark. REQUIRED if ARIA role is set to region, complementary, or main - without it the landmark has no accessible name and will fail WCAG 2.4.6 / Lighthouse. Example: 'Dashboard', 'My spend overview', 'Announcements sidebar'. Leave blank if ARIA role is None."
+                                        fieldLabel="ARIA label"
+                                        name="./ariaLabel"/>
+                                </items>
+                            </column>
+                        </items>
+                    </columns>
+                </items>
+            </accessibilityTab>
+        </items>
+    </content>
+</jcr:root>

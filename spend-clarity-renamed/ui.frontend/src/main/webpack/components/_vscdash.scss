@@ -1,0 +1,214 @@
+/* ============================================================
+   VSC dashboard components — Figma "Spend Clarity Demo FINAL" › Home
+   VSC Transactions (.cmp-vtxn), VSC Account Management (.cmp-vacct),
+   VSC Expenses (.cmp-vmyexp), VSC Footer (.cmp-vfoot).
+   Each is scoped to its own block; no viewport-height sizing (AEM editor safe).
+   Contrast on white: text #202124 16:1, muted #52555c 7.4:1, links #1a3b7e 10.6:1.
+   ============================================================ */
+.cmp-vtxn,
+.cmp-vacct,
+.cmp-vmyexp {
+    --vd-border: #dfe2e6;
+    --vd-rule: #e8eaed;
+    --vd-gold: #c9a227;
+    --vd-link: #1a3b7e;
+    --vd-muted: #52555c;
+    --vd-navy: #1a1f71;
+
+    box-sizing: border-box;
+    margin: 0 0 8px;
+    color: #202124;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.cmp-vtxn *, .cmp-vacct *, .cmp-vmyexp * { box-sizing: border-box; }
+
+/* Section heading with gold rule (ADMINISTRATOR / MY EXPENSES) */
+.cmp-vtxn__section,
+.cmp-vmyexp__section {
+    display: flex;
+    align-items: center;
+    min-height: 46px;
+    margin: 0 0 8px;
+    padding: 0 14px;
+    background: #fff;
+    border: 1px solid var(--vd-border);
+    border-bottom: 3px solid var(--vd-gold);
+    color: #202124;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+/* ---------- Transactions ---------- */
+.cmp-vtxn__card,
+.cmp-vmyexp__card,
+.cmp-vacct__table { background: #fff; border: 1px solid var(--vd-border); }
+.cmp-vtxn__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--vd-rule);
+}
+.cmp-vtxn__title { margin: 0; font-size: 15px; font-weight: 700; }
+.cmp-vtxn__range { margin: 0; font-size: 11px; }
+.cmp-vtxn__body { padding: 14px; }
+.cmp-vtxn__show,
+.cmp-vtxn__period { max-width: 264px; }
+.cmp-vtxn__period { margin-top: 18px; }
+
+.cmp-vtxn .cmp-field,
+.cmp-vmyexp .cmp-field { position: relative; margin: 0; }
+.cmp-vtxn .cmp-field__box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 36px;
+    padding: 1px 8px 0;
+    background: #fff;
+    border: 1px solid #8c9097;
+    border-radius: 2px;
+}
+.cmp-vtxn .cmp-field__box:focus-within { outline: 2px solid var(--vsc-focus, #1976d2); outline-offset: 1px; }
+.cmp-vtxn .cmp-field__label { display: block; margin: 0; color: var(--vd-muted); font-size: 10px; line-height: 1.2; }
+.cmp-vtxn .cmp-field__select {
+    width: 100%;
+    min-height: 24px;
+    padding: 0 24px 0 0;
+    background: transparent;
+    border: 0;
+    color: #202124;
+    font: inherit;
+    font-size: 12px;
+    appearance: none;
+    box-shadow: none;
+    outline: none;
+    cursor: pointer;
+}
+.cmp-vtxn .cmp-field__select:focus-visible { outline: none; }
+.cmp-vtxn .cmp-field__chev { position: absolute; top: 50%; right: 8px; margin-top: -4px; color: #333; pointer-events: none; }
+.cmp-vtxn .cmp-field__err { display: none; }
+
+.cmp-vtxn__gauges,
+.cmp-vtxn__totals {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0;
+    text-align: center;
+}
+.cmp-vtxn__gauges { align-items: end; margin-top: 8px; }
+.cmp-vtxn__metric {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+}
+.cmp-vtxn__metric dt { margin: 0; font-size: 11px; }
+.cmp-vtxn__metric dd { margin: 4px 0 0; font-size: 22px; font-weight: 300; line-height: 1; }
+.cmp-vtxn__metric--gauge { padding-top: 6px; }
+.cmp-vtxn__arc { position: absolute; top: 0; left: 50%; width: 158px; height: 132px; margin-left: -79px; }
+.cmp-vtxn__arc-track,
+.cmp-vtxn__arc-fill { fill: none; stroke-width: 5; stroke-linecap: round; }
+.cmp-vtxn__arc-track { stroke: #c9ccd1; }
+.cmp-vtxn__arc-fill { stroke: var(--vd-navy); transition: stroke-dasharray .3s ease; }
+.cmp-vtxn__arc-fill[stroke-dasharray^="0 "] { visibility: hidden; }
+.cmp-vtxn__totals { margin-top: 26px; }
+.cmp-vtxn__totals dt { margin: 0; font-size: 10px; }
+.cmp-vtxn__totals dd { margin: 8px 0 0; font-size: 23px; font-weight: 300; line-height: 1; }
+.cmp-vtxn__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 24px;
+    margin-top: 16px;
+    color: var(--vd-link);
+    font-size: 11px;
+    text-decoration: none;
+}
+.cmp-vtxn__link:hover { text-decoration: underline; }
+.cmp-vtxn__link:focus-visible,
+.cmp-vacct__link:focus-visible,
+.cmp-vfoot__link:focus-visible { outline: 2px solid var(--vsc-focus, #1976d2); outline-offset: 2px; }
+
+/* ---------- Account Management ---------- */
+.cmp-vacct__table { width: 100%; border-collapse: collapse; }
+.cmp-vacct__table th,
+.cmp-vacct__table td {
+    height: 30px;
+    padding: 2px 14px;
+    border-bottom: 1px solid var(--vd-rule);
+    text-align: left;
+    vertical-align: middle;
+}
+.cmp-vacct__table thead th { height: 40px; padding-top: 10px; font-size: 11px; font-weight: 700; vertical-align: bottom; }
+.cmp-vacct__table tbody tr:last-child th,
+.cmp-vacct__table tbody tr:last-child td { border-bottom: 0; }
+.cmp-vacct__table tbody th { font-weight: 400; }
+.cmp-vacct__title { margin: 0; font-size: 15px; font-weight: 700; }
+.cmp-vacct__table .cmp-vacct__num { width: 64px; text-align: right; }
+.cmp-vacct__table tbody .cmp-vacct__num { font-size: 22px; font-weight: 300; line-height: 1; }
+.cmp-vacct__link { display: inline-flex; align-items: center; min-height: 24px; color: var(--vd-link); font-size: 11px; text-decoration: none; }
+.cmp-vacct__link:hover { text-decoration: underline; }
+
+/* ---------- My expenses ---------- */
+.cmp-vmyexp__card { padding: 14px; }
+.cmp-vmyexp__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--vd-rule);
+    font-size: 14px;
+    font-weight: 700;
+}
+.cmp-vmyexp__name svg { color: var(--vd-muted); }
+.cmp-vmyexp__holder { margin: 12px 0 0; font-size: 12px; font-weight: 700; }
+.cmp-vmyexp__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 18px 0 0; }
+.cmp-vmyexp__stats dt { margin: 0; font-size: 10px; }
+.cmp-vmyexp__stats dd { margin: 8px 0 0; font-size: 22px; font-weight: 300; line-height: 1; }
+
+/* ---------- Footer ---------- */
+.cmp-vfoot {
+    box-sizing: border-box;
+    width: 100%;
+    background: #eef0f2;
+    border-top: 1px solid #dfe2e6;
+    color: #202124;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+.cmp-vfoot__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+    max-width: 1032px;
+    min-height: 40px;
+    margin: 0 auto;
+    padding: 8px 16px;
+}
+.cmp-vfoot__copy { margin: 0; }
+.cmp-vfoot__links { display: flex; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cmp-vfoot__link { display: inline-flex; align-items: center; min-height: 24px; color: #202124; text-decoration: underline; }
+.cmp-vfoot__link:hover { color: var(--vsc-blue, #1a3b7e); }
+
+@media (max-width: 767.98px) {
+    .cmp-vtxn__gauges, .cmp-vtxn__totals { grid-template-columns: minmax(0, 1fr); }
+    .cmp-vmyexp__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .cmp-vtxn__arc-fill { transition: none; }
+}
+@media (forced-colors: active) {
+    .cmp-vtxn__arc-fill { stroke: Highlight; }
+    .cmp-vtxn__arc-track { stroke: CanvasText; }
+}

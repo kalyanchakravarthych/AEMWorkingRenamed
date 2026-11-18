@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="VSC Footer"
+    sling:resourceType="cq/gui/components/authoring/dialog">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns">
+        <items jcr:primaryType="nt:unstructured">
+            <column
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container">
+                <items jcr:primaryType="nt:unstructured">
+                    <copyright
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to © 2026 Visa Inc. All Rights Reserved."
+                        fieldLabel="Copyright"
+                        name="./copyright"/>
+                    <termsText
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to Terms of Use."
+                        fieldLabel="Terms link text"
+                        name="./termsText"/>
+                    <termsLink
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Terms of Use page."
+                        fieldLabel="Terms link"
+                        rootPath="/content"
+                        name="./termsLink"/>
+                    <privacyText
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to Privacy policy."
+                        fieldLabel="Privacy link text"
+                        name="./privacyText"/>
+                    <privacyLink
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Privacy policy page."
+                        fieldLabel="Privacy link"
+                        rootPath="/content"
+                        name="./privacyLink"/>
+                    <navLabel
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Accessible name of the links navigation. Defaults to Legal."
+                        fieldLabel="Links label"
+                        name="./navLabel"/>
+                    <id
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Optional HTML ID"
+                        fieldLabel="ID"
+                        name="./id"/>
+                </items>
+            </column>
+        </items>
+    </content>
+</jcr:root>

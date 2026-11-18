@@ -1,0 +1,33 @@
+<!--/* VSC Expenses Left Nav — Figma "Spend Clarity Demo FINAL" › Expenses.
+    Yellow "+ Add" action and the section links (Expenses). Authorable in the
+    dialog; with nothing authored it renders the Figma defaults.
+    The current page's link gets aria-current="page" and the active style. */-->
+<template data-sly-template.addContent="${@ text}">
+    <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+        <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.25" stroke-linecap="round"/>
+    </svg>
+    <span>${text}</span>
+</template>
+<sly data-sly-test.addText="${properties.addText || 'Add'}"/>
+<sly data-sly-test.itemText="${properties.itemText || 'Expenses'}"/>
+<sly data-sly-test.itemLink="${properties.itemLink || currentPage.path}"/>
+<sly data-sly-test.isCurrent="${itemLink == currentPage.path}"/>
+<nav class="cmp-expnav" id="${properties.id}" aria-label="${properties.navLabel || 'Expenses'}">
+    <a data-sly-test="${properties.addLink}" class="cmp-expnav__add"
+       href="${properties.addLink @ extension='html'}"><sly data-sly-call="${addContent @ text=addText}"/></a>
+    <a data-sly-test="${!properties.addLink}" class="cmp-expnav__add" href="#"><sly
+            data-sly-call="${addContent @ text=addText}"/></a>
+    <ul class="cmp-expnav__list">
+        <li>
+            <a class="cmp-expnav__link${isCurrent ? ' cmp-expnav__link--active' : ''}"
+               href="${itemLink @ extension='html'}"
+               data-sly-attribute.aria-current="${isCurrent ? 'page' : ''}">
+                <svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true" focusable="false">
+                    <rect x="2.5" y="1.75" width="11" height="12.5" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                    <path d="M5 5.5h6M5 8h6M5 10.5h6" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span>${itemText}</span>
+            </a>
+        </li>
+    </ul>
+</nav>

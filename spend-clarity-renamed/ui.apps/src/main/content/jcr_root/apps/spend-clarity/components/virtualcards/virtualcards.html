@@ -1,0 +1,239 @@
+<!--/* VSC Virtual Cards — Figma "Spend Clarity Demo FINAL" › Issue Virtual Cards.
+    Full-width page component: place it in a full-width Layout Container under the
+    header. It aligns its content with the header (24px side gutters).
+
+    Reuses the catalog components through their HTL template libraries:
+      searchctrl (Search + Find), statuspill, txtinput, dateinput, dropdown,
+      datatable (selected employees), mccsel (blocked merchant groups), toast.
+
+    Flow: list → "+ Add virtual cards" → drawer
+      1 Details → 2 Employees → 3 Review (+ blocked groups) → Create
+      → toast "Virtual card is being created…" → new row(s) added to the list.
+    The default row is server-rendered (visible in the AEM editor and without JS).
+    All data is in-memory; refreshing the page restores the default row. */-->
+<sly data-sly-use.sc="../searchctrl/searchctrl.html"
+     data-sly-use.pill="../statuspill/statuspill.html"
+     data-sly-use.txt="../txtinput/txtinput.html"
+     data-sly-use.date="../dateinput/dateinput.html"
+     data-sly-use.dd="../dropdown/dropdown.html"
+     data-sly-use.dt="../datatable/datatable.html"
+     data-sly-use.mcc="../mccsel/mccsel.html"
+     data-sly-use.toast="../toast/toast.html"/>
+<!--/* --fill (viewport height) only outside the AEM editor; see _vsc.scss. */-->
+<section class="cmp-vclist${wcmmode.disabled ? ' cmp-vclist--fill' : ''}" id="${properties.id}" data-cmp-vclist
+         aria-labelledby="cmp-vclist-title">
+    <h1 class="cmp-vclist__title" id="cmp-vclist-title">${properties.title || 'Virtual cards'}</h1>
+
+    <!-- ============ Search (left) + Find (right) ============ -->
+    <div class="cmp-vclist__controls" role="search" aria-label="Virtual cards">
+        <div class="cmp-vclist__search">
+            <sly data-sly-call="${sc.search @ id='cmp-vclist-search', label='Search virtual cards', placeholder='Search', chevron=true}"/>
+        </div>
+        <div class="cmp-vclist__find">
+            <sly data-sly-call="${sc.search @ id='cmp-vclist-find', label='Find virtual cards', placeholder='Find'}"/>
+            <button type="button" class="cmp-btn cmp-vclist__find-btn" data-cmp-vclist-find-btn>Find</button>
+        </div>
+    </div>
+    <p class="cmp-visually-hidden" aria-live="polite" data-cmp-vclist-status></p>
+
+    <!-- ============ Virtual cards list ============ -->
+    <div class="cmp-vclist__table-wrap">
+        <table class="cmp-datatable__table cmp-vclist__table" aria-labelledby="cmp-vclist-title">
+            <colgroup>
+                <col class="cmp-vclist__col--avatar"/>
+                <col class="cmp-vclist__col--name"/>
+                <col class="cmp-vclist__col--desc"/>
+                <col class="cmp-vclist__col--status"/>
+                <col class="cmp-vclist__col--type"/>
+                <col class="cmp-vclist__col--dates"/>
+                <col class="cmp-vclist__col--limit"/>
+                <col class="cmp-vclist__col--details"/>
+            </colgroup>
+            <thead class="cmp-vclist__thead">
+                <tr>
+                    <th scope="col">Initials</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Date range</th>
+                    <th scope="col">Spend limit</th>
+                    <th scope="col">Details</th>
+                </tr>
+            </thead>
+            <tbody data-cmp-tbody="vclist">
+                <tr>
+                    <td><span class="cmp-avatar" aria-hidden="true">CA</span></td>
+                    <td class="cmp-vclist__name">Cristina Arias</td>
+                    <td>Conference in Austin</td>
+                    <td><sly data-sly-call="${pill.pill @ status='active', label='Active'}"/></td>
+                    <td>Single-use</td>
+                    <td>05/25/2026 - 06/24/2026</td>
+                    <td class="cmp-vclist__limit">1.00 Spend limit (USD)</td>
+                    <td class="cmp-vclist__details">
+                        <a href="#" class="cmp-vclist__detail" aria-label="View Cristina Arias virtual card details">
+                            <svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true" focusable="false">
+                                <path d="M4 1.5L8.5 6 4 10.5" stroke="currentColor" stroke-width="2.25" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="cmp-vclist__empty" data-cmp-vclist-empty hidden>No virtual cards match your search.</p>
+    </div>
+
+    <div class="cmp-vclist__add-wrap">
+        <button type="button" class="cmp-btn cmp-btn--yellow cmp-vclist__add" data-cmp-vclist-add-trigger aria-haspopup="dialog">
+            <span aria-hidden="true">+</span>Add virtual cards
+        </button>
+    </div>
+
+    <!-- ============ Add virtual cards drawer (3 steps) ============ -->
+    <div class="cmp-drawer cmp-vclist__drawer" data-cmp-vclist-drawer data-step="1" hidden>
+        <div class="cmp-drawer__backdrop" data-cmp-vclist-backdrop></div>
+        <div class="cmp-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cmp-vclist-drawer-title" tabindex="-1">
+            <header class="cmp-drawer__header">
+                <button type="button" class="cmp-drawer__close" data-cmp-vclist-close aria-label="Close add virtual cards">
+                    <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+                        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </button>
+                <h2 class="cmp-drawer__title" id="cmp-vclist-drawer-title">Add virtual cards</h2>
+            </header>
+
+            <form class="cmp-vcwiz" novalidate data-cmp-vcwiz-form>
+                <!-- Step 1: Details -->
+                <section class="cmp-vcwiz__step" data-cmp-wizard-step="1" aria-labelledby="cmp-vcwiz-step1-title">
+                    <div class="cmp-vcwiz__band">
+                        <h3 class="cmp-vcwiz__band-title" id="cmp-vcwiz-step1-title">Details</h3>
+                    </div>
+                    <div class="cmp-vcwiz__body">
+                        <p class="cmp-form__error" role="alert" data-cmp-vcwiz-error="1" hidden></p>
+                        <sly data-sly-call="${txt.field @ id='vcf-desc', name='description', label='Description', required=true,
+                                               maxlength='80', autocomplete='off', variant='inset',
+                                               errorText='Enter a description.'}"/>
+                        <sly data-sly-call="${txt.field @ id='vcf-spend', name='spendLimit', label='Spend limit', required=true,
+                                               inputmode='decimal', variant='inset',
+                                               errorText='Enter a spend limit greater than 0, for example 250.00.'}"/>
+                        <sly data-sly-call="${date.field @ id='vcf-start', name='startDate', label='Start date', required=true,
+                                               picker=true, variant='inset', errorText='Enter a start date.'}"/>
+                        <sly data-sly-call="${date.field @ id='vcf-end', name='endDate', label='End date (up to 3 years from today)',
+                                               required=true, picker=true, variant='inset',
+                                               errorText='Enter an end date after the start date and within 3 years from today.'}"/>
+                        <sly data-sly-call="${dd.field @ id='vcf-currency', name='currency', label='Source currency', required=true,
+                                               options=['US Dollar', 'Euro', 'British Pound'], value='US Dollar', variant='inset'}"/>
+                        <sly data-sly-call="${dd.field @ id='vcf-spendtype', name='spendType', label='Choose a spend type', required=true,
+                                               options=['Single use virtual card', 'Multi-use virtual card', 'Recurring virtual card'],
+                                               value='Single use virtual card', variant='inset'}"/>
+                    </div>
+                </section>
+
+                <!-- Step 2: Employees -->
+                <section class="cmp-vcwiz__step" data-cmp-wizard-step="2" aria-labelledby="cmp-vcwiz-step2-title" hidden>
+                    <div class="cmp-vcwiz__band">
+                        <h3 class="cmp-vcwiz__band-title" id="cmp-vcwiz-step2-title">Employees</h3>
+                    </div>
+                    <div class="cmp-vcwiz__body">
+                        <dl class="cmp-vcwiz__summary">
+                            <div class="cmp-vcwiz__sumrow"><dt>Description</dt><dd data-cmp-vcsum="description"></dd></div>
+                            <div class="cmp-vcwiz__sumrow"><dt>Spend limit</dt><dd data-cmp-vcsum="spendLimit"></dd></div>
+                            <div class="cmp-vcwiz__sumrow"><dt>Date range</dt><dd data-cmp-vcsum="dateRange"></dd></div>
+                            <div class="cmp-vcwiz__sumrow"><dt>Payment type</dt><dd data-cmp-vcsum="paymentType"></dd></div>
+                            <div class="cmp-vcwiz__sumrow"><dt>Spend type</dt><dd data-cmp-vcsum="spendType"></dd></div>
+                        </dl>
+                        <div class="cmp-vcwiz__section">
+                            <div class="cmp-vcwiz__emp-head">
+                                <h4 class="cmp-vcwiz__sub" id="cmp-vcwiz-emp-title">Employee</h4>
+                                <button type="button" class="cmp-btn cmp-vcwiz__outline" data-cmp-vcemp-add aria-haspopup="dialog">
+                                    <span aria-hidden="true">+</span>Select employees
+                                </button>
+                            </div>
+                            <p class="cmp-form__error" role="alert" data-cmp-vcwiz-error="2" hidden></p>
+                            <div class="cmp-vcwiz__emp-table">
+                                <sly data-sly-call="${dt.vscTable @
+                                    caption='Selected employees',
+                                    titleId='cmp-vcwiz-emp-title',
+                                    tbodyHook='vcemp',
+                                    c1='Name',
+                                    c2='Employee ID',
+                                    detailsCol=true,
+                                    detailsLabel='Actions'}"/>
+                            </div>
+                            <p class="cmp-vcwiz__emp-empty" data-cmp-vcemp-empty>No employees selected yet.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3: Review + blocked merchant category groups -->
+                <section class="cmp-vcwiz__step" data-cmp-wizard-step="3" aria-labelledby="cmp-vcwiz-step3-title" hidden>
+                    <div class="cmp-vcwiz__band cmp-vcwiz__band--back">
+                        <button type="button" class="cmp-btn cmp-vcwiz__outline cmp-vcwiz__back-link" data-cmp-vcwiz-back-link>
+                            <svg viewBox="0 0 12 12" width="9" height="9" aria-hidden="true" focusable="false">
+                                <path d="M8 1.5L3.5 6 8 10.5" stroke="currentColor" stroke-width="2.25" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Back</span>
+                        </button>
+                        <h3 class="cmp-vcwiz__band-title" id="cmp-vcwiz-step3-title" data-cmp-vcsum="description"></h3>
+                    </div>
+                    <div class="cmp-vcwiz__body cmp-vcwiz__body--review">
+                        <div class="cmp-vcwiz__section">
+                            <h4 class="cmp-vcwiz__sub">Details</h4>
+                            <dl class="cmp-vcwiz__grid">
+                                <div><dt>Spend type</dt><dd data-cmp-vcsum="spendType"></dd></div>
+                                <div><dt>Spend limit</dt><dd data-cmp-vcsum="spendLimit"></dd></div>
+                                <div><dt>Payment type</dt><dd data-cmp-vcsum="paymentType"></dd></div>
+                                <div class="cmp-vcwiz__grid-break"><dt>Date range</dt><dd data-cmp-vcsum="dateRange"></dd></div>
+                            </dl>
+                        </div>
+                        <div class="cmp-vcwiz__section">
+                            <h4 class="cmp-vcwiz__sub">Employee</h4>
+                            <ul class="cmp-vcwiz__emp-list" data-cmp-vcemp-summary></ul>
+                        </div>
+                        <div class="cmp-vcwiz__section cmp-vcwiz__section--mcc">
+                            <sly data-sly-call="${mcc.groups @ name='blockedGroups', title='Blocked merchant category groups'}"/>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Footer: step 1 [Next] · step 2 [Back | Next] · step 3 [Create … Cancel] -->
+                <footer class="cmp-vcwiz__footer">
+                    <button type="button" class="cmp-vcwiz__navbtn" data-cmp-vcwiz-back hidden>Back</button>
+                    <button type="button" class="cmp-vcwiz__navbtn" data-cmp-vcwiz-next>Next</button>
+                    <button type="button" class="cmp-btn cmp-btn--yellow cmp-vcwiz__create" data-cmp-vcwiz-create hidden>Create</button>
+                    <button type="button" class="cmp-btn cmp-vcwiz__outline cmp-vcwiz__cancel" data-cmp-vcwiz-cancel hidden>Cancel</button>
+                </footer>
+            </form>
+
+            <!-- Select employees dialog (opened from step 2) -->
+            <div class="cmp-vcemp-modal" data-cmp-vcemp-modal hidden>
+                <div class="cmp-vcemp-modal__backdrop" data-cmp-vcemp-backdrop></div>
+                <div class="cmp-vcemp-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="cmp-vcemp-modal-title" tabindex="-1">
+                    <header class="cmp-vcemp-modal__header">
+                        <h3 class="cmp-vcemp-modal__title" id="cmp-vcemp-modal-title">Select employees</h3>
+                        <button type="button" class="cmp-drawer__close" data-cmp-vcemp-close aria-label="Close select employees">
+                            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+                                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </header>
+                    <fieldset class="cmp-vcemp-modal__body">
+                        <legend class="cmp-visually-hidden">Employees</legend>
+                        <ul class="cmp-vcemp-modal__list">
+                            <li class="cmp-vcemp-modal__item"><label><input type="checkbox" value="AMILLER01" data-name="Alex Miller"/><span class="cmp-avatar" aria-hidden="true">AM</span><span class="cmp-vcemp-modal__name">Alex Miller</span><span class="cmp-vcemp-modal__id">AMILLER01</span></label></li>
+                            <li class="cmp-vcemp-modal__item"><label><input type="checkbox" value="DEVERETT01" data-name="Daniel Everett"/><span class="cmp-avatar" aria-hidden="true">DE</span><span class="cmp-vcemp-modal__name">Daniel Everett</span><span class="cmp-vcemp-modal__id">DEVERETT01</span></label></li>
+                            <li class="cmp-vcemp-modal__item"><label><input type="checkbox" value="JSMITH02" data-name="Jane Smith"/><span class="cmp-avatar" aria-hidden="true">JS</span><span class="cmp-vcemp-modal__name">Jane Smith</span><span class="cmp-vcemp-modal__id">JSMITH02</span></label></li>
+                        </ul>
+                    </fieldset>
+                    <footer class="cmp-vcemp-modal__footer">
+                        <button type="button" class="cmp-btn cmp-vcwiz__outline" data-cmp-vcemp-cancel>Cancel</button>
+                        <button type="button" class="cmp-btn cmp-btn--primary" data-cmp-vcemp-confirm>Add selected</button>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <sly data-sly-call="${toast.toast @ type='success', hook='vclist',
+                           message='Virtual card is being created. This may take some time.'}"/>
+</section>

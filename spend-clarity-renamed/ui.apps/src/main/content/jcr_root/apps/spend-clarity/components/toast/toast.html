@@ -1,0 +1,26 @@
+<!--/* VSC Success Notification (toast) — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.toast="../toast/toast.html"
+                 data-sly-call="${toast.toast @ type='success', message='Saved.', hook='my-toast'}"/>
+    Arguments: type (success | info | error), message, title (optional bold first line),
+               hook (data-cmp-toast value for JS).
+    A11y: polite live region; the dismiss button has an accessible name. */-->
+<template data-sly-template.toast="${@ type, message, hook, title}">
+    <div class="cmp-toast cmp-toast--${type || 'success'}" role="status" aria-live="polite" aria-atomic="true"
+         data-cmp-toast="${hook || 'toast'}" hidden>
+        <span class="cmp-toast__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </span>
+        <p class="cmp-toast__text"><strong data-sly-test="${title}" class="cmp-toast__title">${title}</strong><span
+                data-cmp-toast-text>${message || 'Card created.'}</span></p>
+        <button type="button" class="cmp-toast__close" data-cmp-toast-close aria-label="Dismiss notification">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </button>
+    </div>
+</template>
+
+<!--/* Standalone */-->
+<sly data-sly-call="${toast @ type=properties.type, message=properties.message}"/>

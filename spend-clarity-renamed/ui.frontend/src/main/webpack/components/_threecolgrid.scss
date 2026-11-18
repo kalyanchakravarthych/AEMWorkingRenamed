@@ -1,0 +1,153 @@
+/* ============================================================
+   VSC Three Column Grid — dashboard three-column layout
+   ============================================================
+   Figma "Spend Clarity Demo FINAL" › Home dashboard:
+
+     |<- start ->|[   col 1   ][r][  col 2 (~1.9x)  ][gap][  col 3  ]|pad|
+     ^                       ^                         ^           ^
+     LEFT edge of           LEFT edge of           RIGHT edge of   right
+     "My Spend" label       "r" in "Cards"         "r" in "Cards"  pad
+
+   start = LEFT edge of "My Spend" tab/label (~49px for default header,
+           tab mode; ~60px for label mode)
+   col   = width of column 1 = from My Spend start to "r" of Cards left edge
+           (~160.4px for default header)
+   gap   = width of the "r" character (~4.7px) - column 2 starts after it
+   right column width = same as column 1 width (symmetric)
+   pad   = matches the header right content padding (24px)
+
+   _threecolgrid.js measures the live header and overwrites the three CSS
+   variables (start, col, gap). Below 900px (where the header collapses
+   into its Menu button) the three columns stack.
+
+   All three columns are OOB Layout Containers (wcm/foundation/components/
+   responsivegrid). Nothing overrides .aem-Grid / .aem-GridColumn so Layout
+   mode, policies and OOB placeholders behave as OOB.
+
+   ACCESSIBILITY + LIGHTHOUSE:
+   - No animations / transitions - safe under prefers-reduced-motion by
+     default, but we add defensive rules to be explicit.
+   - Forced-colors (Windows High Contrast / "forced colors active" mode):
+     grid lines, if any, use system colors so the layout stays visible.
+   - Print: columns stack so content is readable on paper (grid layout
+     becomes block layout automatically, no explicit page-break styles
+     needed for a pure wrapper).
+   - RTL: relies on CSS logical properties for padding so the component
+     mirrors correctly when `dir="rtl"` is set on <html>.
+   - No forced colors, outlines, or z-index on the wrapper - authored
+     focus-visible styles from inner components (buttons, links) show
+     through untouched.
+   ============================================================ */
+
+.cmp-threecolgrid {
+    --cmp-threecolgrid-start: 49px;      /* LEFT edge of "My Spend" tab box     */
+    --cmp-threecolgrid-col: 160.4px;     /* width from My Spend start to "r"    */
+    --cmp-threecolgrid-gap: 4.7px;       /* width of the "r" character          */
+    --cmp-threecolgrid-pad-x: 24px;      /* matches header right padding        */
+    --cmp-threecolgrid-pad-y: 8px;
+
+    box-sizing: border-box;
+    width: 100%;
+    background: transparent;
+    /* No forced font-size / line-height / color - inherit from the page
+       so authored content keeps its design-system typography. */
+}
+
+/* Label-aligned mode: anchors to visible text instead of tab box */
+.cmp-threecolgrid[data-cmp-threecolgrid-align="label"] {
+    --cmp-threecolgrid-start: 60px;
+    --cmp-threecolgrid-col: 149px;
+}
+
+.cmp-threecolgrid__inner {
+    display: grid;
+    grid-template-columns:
+        minmax(0, var(--cmp-threecolgrid-col))
+        minmax(0, calc(1.9 * var(--cmp-threecolgrid-col)))
+        minmax(0, var(--cmp-threecolgrid-col));
+    column-gap: var(--cmp-threecolgrid-gap);
+    row-gap: 0;
+    align-items: start;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    /* padding-block + padding-inline keep the design identical for LTR
+       and mirror correctly for RTL readers (Arabic, Hebrew, ...).      */
+    padding-block: var(--cmp-threecolgrid-pad-y) 0;
+    padding-inline: var(--cmp-threecolgrid-start) var(--cmp-threecolgrid-pad-x);
+}
+
+.cmp-threecolgrid__col {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0; /* stops long content breaking the column split */
+    /* Make sure focus outlines from authored interactive content inside
+       the column are never clipped by overflow on this wrapper.       */
+    overflow: visible;
+}
+
+/* Editor only: give empty columns a comfortable drop zone.
+   The OOB placeholder (text, overlay, borders) is left untouched. */
+.cmp-threecolgrid__col .cq-placeholder {
+    min-height: 120px;
+}
+
+/* ---- Responsive ---- */
+/* Stack below the header's mobile breakpoint (its nav collapses there). */
+@media (max-width: 899.98px) {
+    .cmp-threecolgrid__inner {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 16px;
+        padding-block: 16px;
+        padding-inline: var(--cmp-threecolgrid-pad-x);
+    }
+}
+
+@media (max-width: 479.98px) {
+    .cmp-threecolgrid {
+        --cmp-threecolgrid-pad-x: 16px; /* matches header on small phones */
+    }
+}
+
+/* ---- Accessibility helpers (defensive) ---- */
+
+/* The wrapper has no animations, but explicitly honor the user preference
+   if authored content inside the columns ever adds one. */
+@media (prefers-reduced-motion: reduce) {
+    .cmp-threecolgrid,
+    .cmp-threecolgrid__inner,
+    .cmp-threecolgrid__col {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Windows High Contrast / forced-colors mode: no background painting -
+   let the OS theme show through so authored content stays legible. */
+@media (forced-colors: active) {
+    .cmp-threecolgrid {
+        background: Canvas;
+        color: CanvasText;
+        forced-color-adjust: none;
+    }
+}
+
+/* Print: always stack into a single column so content fits on paper.
+   break-inside: avoid prevents each column from being split mid-page. */
+@media print {
+    .cmp-threecolgrid__inner {
+        display: block;
+        padding: 0;
+    }
+    .cmp-threecolgrid__col {
+        display: block;
+        width: 100%;
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+    .cmp-threecolgrid__col + .cmp-threecolgrid__col {
+        margin-top: 12pt;
+    }
+}

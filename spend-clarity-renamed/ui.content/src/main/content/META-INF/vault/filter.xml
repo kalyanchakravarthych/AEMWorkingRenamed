@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/conf/spend-clarity" mode="merge"/>
+    <filter root="/content/spend-clarity" mode="merge"/>
+    <filter root="/content/dam/spend-clarity" mode="merge">
+        <exclude pattern="/content/dam/spend-clarity(/.*)?"/>
+        <include pattern="/content/dam/spend-clarity/jcr:content(/.*)?"/>
+    </filter>
+    <filter root="/content/dam/spend-clarity/asset.jpg" mode="merge"/>
+    <filter root="/content/experience-fragments/spend-clarity" mode="merge"/>
+</workspaceFilter>

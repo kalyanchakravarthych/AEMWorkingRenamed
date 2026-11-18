@@ -1,0 +1,58 @@
+<!--/* VSC Data Table — HTL template library + standalone component.
+    REUSABLE: both cardlisting and virtualcards (and any future page) call
+    the SAME vscTable template below. The structure, A11y, classes, and
+    semantics live here ONLY — no duplication across pages.
+
+    Template arguments:
+      caption, titleId, tbodyHook (required for consumer)
+      selectAll, selectAllId, selectAllLabel  — leading checkbox col
+      avatarCol  — leading empty TH (avatar cell will render below)
+      c1..c8     — column labels; empty/undefined slot = skip
+      detailsCol — trailing details chevron col with SR label
+      detailsLabel — SR label of that column (default 'Details', e.g. 'Actions')
+
+    Usage A: standalone (bottom of file renders a 3-col demo).
+    Usage B: imported via data-sly-use + data-sly-call. */-->
+<template data-sly-template.vscTable="${@
+    caption, titleId, tbodyHook,
+    selectAll, selectAllId, selectAllLabel, avatarCol,
+    c1, c2, c3, c4, c5, c6, c7, c8,
+    detailsCol, detailsLabel}">
+    <div class="cmp-datatable">
+        <table class="cmp-datatable__table" data-sly-attribute.aria-labelledby="${titleId}">
+            <caption class="cmp-visually-hidden">${caption || 'Table'}</caption>
+            <thead>
+                <tr>
+                    <sly data-sly-test="${selectAll}">
+                        <th scope="col" class="cmp-datatable__th cmp-datatable__th--check">
+                            <label class="cmp-visually-hidden" for="${selectAllId || 'cmp-dt-selectall'}">${selectAllLabel || 'Select all rows'}</label>
+                            <input type="checkbox" id="${selectAllId || 'cmp-dt-selectall'}" data-cmp-selectall/>
+                        </th>
+                    </sly>
+                    <sly data-sly-test="${avatarCol}">
+                        <th scope="col" class="cmp-datatable__th cmp-datatable__th--avatar"><span class="cmp-visually-hidden">Avatar</span></th>
+                    </sly>
+                    <th data-sly-test="${c1}" scope="col" class="cmp-datatable__th">${c1}</th>
+                    <th data-sly-test="${c2}" scope="col" class="cmp-datatable__th">${c2}</th>
+                    <th data-sly-test="${c3}" scope="col" class="cmp-datatable__th">${c3}</th>
+                    <th data-sly-test="${c4}" scope="col" class="cmp-datatable__th">${c4}</th>
+                    <th data-sly-test="${c5}" scope="col" class="cmp-datatable__th">${c5}</th>
+                    <th data-sly-test="${c6}" scope="col" class="cmp-datatable__th">${c6}</th>
+                    <th data-sly-test="${c7}" scope="col" class="cmp-datatable__th">${c7}</th>
+                    <th data-sly-test="${c8}" scope="col" class="cmp-datatable__th">${c8}</th>
+                    <sly data-sly-test="${detailsCol}">
+                        <th scope="col" class="cmp-datatable__th cmp-datatable__th--details"><span class="cmp-visually-hidden">${detailsLabel || 'Details'}</span></th>
+                    </sly>
+                </tr>
+            </thead>
+            <tbody data-sly-attribute.data-cmp-tbody="${tbodyHook}"></tbody>
+        </table>
+    </div>
+</template>
+
+<!--/* STANDALONE DEMO: when dropped on a page as its own component. */-->
+<sly data-sly-call="${vscTable @
+    caption='Example data table',
+    tbodyHook='demo',
+    c1='Column A', c2='Column B', c3='Column C',
+    detailsCol=true}"/>

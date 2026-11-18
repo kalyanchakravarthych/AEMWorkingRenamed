@@ -1,0 +1,18 @@
+<sly data-sly-test.titleText="${properties.title || 'Expense coding'}"/>
+<section class="cmp-expcode" aria-labelledby="cmp-expcode-title">
+    <h3 class="cmp-expcode__title" id="cmp-expcode-title">${titleText}</h3>
+    <div class="cmp-expcode__row">
+        <label class="cmp-field__label" for="cmp-expcode-cat">Category</label>
+        <select id="cmp-expcode-cat" class="cmp-field__select">
+            <option>Travel</option><option>Office supplies</option><option>Meals</option>
+        </select>
+    </div>
+    <div class="cmp-expcode__row">
+        <label class="cmp-field__label" for="cmp-expcode-gl">GL Code</label>
+        <input type="text" id="cmp-expcode-gl" class="cmp-field__input" value="6100"/>
+    </div>
+    <div class="cmp-expcode__row">
+        <label class="cmp-field__label" for="cmp-expcode-split">Split %</label>
+        <input type="number" id="cmp-expcode-split" class="cmp-field__input" min="0" max="100" value="100"/>
+    </div>
+</section>

@@ -1,0 +1,17 @@
+<sly data-sly-test.titleText="${properties.title || 'Drawer'}"/>
+<div class="cmp-drawer" hidden>
+    <div class="cmp-drawer__backdrop" aria-hidden="true"></div>
+    <aside class="cmp-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="cmp-drawer-title" tabindex="-1">
+        <header class="cmp-drawer__header">
+            <button type="button" class="cmp-drawer__close" aria-label="Close drawer">
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <h2 class="cmp-drawer__title" id="cmp-drawer-title">${titleText}</h2>
+        </header>
+        <div class="cmp-drawer__body">
+            <sly data-sly-resource="${'content' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+    </aside>
+</div>

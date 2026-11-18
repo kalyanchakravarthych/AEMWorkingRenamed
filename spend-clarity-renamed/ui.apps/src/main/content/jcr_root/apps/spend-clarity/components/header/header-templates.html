@@ -1,0 +1,25 @@
+<!--/* Header partials. */-->
+
+<!--/* Dropdown caret (decorative). */-->
+<template data-sly-template.caret>
+    <svg class="cmp-header__caret" viewBox="0 0 12 8" width="10" height="7" aria-hidden="true" focusable="false">
+        <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none"
+              stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+</template>
+
+<!--/* Default disclosure item (used only when no navigation is authored). */-->
+<template data-sly-template.disclosure="${@ label, links}">
+    <button type="button" class="cmp-header__nav-link" aria-expanded="false" data-cmp-header-trigger>
+        <span>${label}</span>
+        <svg class="cmp-header__caret" viewBox="0 0 12 8" width="10" height="7" aria-hidden="true" focusable="false">
+            <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <ul class="cmp-header__subnav-list" hidden>
+        <li data-sly-repeat.text="${links}" class="cmp-header__subnav-item">
+            <a href="#" class="cmp-header__subnav-link">${text}</a>
+        </li>
+    </ul>
+</template>

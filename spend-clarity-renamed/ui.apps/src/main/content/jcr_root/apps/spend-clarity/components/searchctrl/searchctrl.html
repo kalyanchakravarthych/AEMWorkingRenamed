@@ -1,0 +1,27 @@
+<!--/* VSC Search Control — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.sc="../searchctrl/searchctrl.html"
+                 data-sly-call="${sc.search @ id='my-search', label='Search cards', placeholder='Search'}"/>
+    Arguments: id, label (accessible name), placeholder, chevron (decorative ▾),
+               landmark (wrap in role="search"; off when the caller provides one). */-->
+<template data-sly-template.search="${@ id, label, placeholder, chevron, landmark}">
+    <sly data-sly-test.inputId="${id || 'cmp-search-input'}"/>
+    <div class="cmp-search" data-sly-attribute.role="${landmark ? 'search' : ''}"
+         data-sly-attribute.aria-label="${landmark ? label : ''}">
+        <label class="cmp-visually-hidden" for="${inputId}">${label || 'Search'}</label>
+        <span class="cmp-search__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.5"/>
+                <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </span>
+        <input type="search" id="${inputId}" class="cmp-search__input"
+               placeholder="${placeholder || 'Search'}" autocomplete="off"/>
+        <svg data-sly-test="${chevron}" class="cmp-search__chev" viewBox="0 0 12 8" width="12" height="8"
+             aria-hidden="true" focusable="false">
+            <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+</template>
+
+<!--/* Standalone */-->
+<sly data-sly-call="${search @ label=(properties.label || 'Search'), placeholder=properties.placeholder, landmark=true}"/>

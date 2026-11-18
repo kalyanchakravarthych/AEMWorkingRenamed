@@ -1,0 +1,51 @@
+<!--/* VSC Guided Journey — Figma "Spend Clarity Demo FINAL" demo tour.
+    Chapters menu (bottom left) + step popovers with Back / Next, yellow hotspot rings and
+    automatic actions on the existing components (Card Listing, Virtual Cards, Expense
+    Categories, Code Expenses). Place it on every demo page (or in the page template) so the
+    journey continues across pages. Progress is kept for the browser tab (sessionStorage).
+    Page links: dialog fields, or the sibling pages cards / virtual-cards /
+    expense-categories / code-expenses of the current page (home = parent page).
+    Not shown in the AEM editor's Edit mode, so it never covers the authoring UI. */-->
+<sly data-sly-test.siteRoot="${currentPage.parent.path}"/>
+<sly data-sly-test.homeHref="${properties.homePage @ extension='html'}"/>
+<sly data-sly-test.cardsHref="${properties.cardsPage @ extension='html'}"/>
+<sly data-sly-test.vcHref="${properties.virtualCardsPage @ extension='html'}"/>
+<sly data-sly-test.ecHref="${properties.expenseCategoriesPage @ extension='html'}"/>
+<sly data-sly-test.cxHref="${properties.codeExpensesPage @ extension='html'}"/>
+<p data-sly-test="${wcmmode.edit}" class="cmp-vtour__placeholder">VSC Guided Journey: shown in Preview and on published pages.</p>
+<div data-sly-test="${!wcmmode.edit}" class="cmp-vtour" id="${properties.id}" data-cmp-vtour
+     data-url-home="${homeHref}" data-default-home="${siteRoot}.html"
+     data-url-cards="${cardsHref}" data-default-cards="${siteRoot}/cards.html"
+     data-url-virtual="${vcHref}" data-default-virtual="${siteRoot}/virtual-cards.html"
+     data-url-categories="${ecHref}" data-default-categories="${siteRoot}/expense-categories.html"
+     data-url-coding="${cxHref}" data-default-coding="${siteRoot}/code-expenses.html"
+     data-welcome="${properties.showWelcome == 'false' ? 'false' : 'true'}">
+    <nav class="cmp-vtour__chapters" aria-label="${properties.menuLabel || 'Demo chapters'}">
+        <ul class="cmp-vtour__list">
+            <li><button type="button" class="cmp-vtour__chapter" data-cmp-vtour-chapter="start">
+                <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" focusable="false"><path d="M2 7.5L8 2l6 5.5V14H10v-4H6v4H2z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                <span>Start Demo</span></button></li>
+            <li><button type="button" class="cmp-vtour__chapter" data-cmp-vtour-chapter="cards">
+                <svg viewBox="0 0 16 12" width="11" height="9" aria-hidden="true" focusable="false"><rect x=".75" y=".75" width="14.5" height="10.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 4h14" stroke="currentColor" stroke-width="2"/></svg>
+                <span>Create &amp; Manage Commercial Cards</span></button></li>
+            <li><button type="button" class="cmp-vtour__chapter" data-cmp-vtour-chapter="virtual">
+                <svg viewBox="0 0 16 12" width="11" height="9" aria-hidden="true" focusable="false"><rect x=".75" y=".75" width="14.5" height="10.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 1.5"/><path d="M1 4h14" stroke="currentColor" stroke-width="2"/></svg>
+                <span>Issue Virtual Cards</span></button></li>
+            <li><button type="button" class="cmp-vtour__chapter" data-cmp-vtour-chapter="categories">
+                <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" focusable="false"><rect x="2.5" y="1.5" width="11" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>Manage Expense Categories</span></button></li>
+            <li><button type="button" class="cmp-vtour__chapter" data-cmp-vtour-chapter="coding">
+                <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true" focusable="false"><rect x="2.5" y="1.5" width="11" height="13" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M5 5h6M5 8h6M5 11h4" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>Code Expenses &amp; Attach Receipts</span></button></li>
+        </ul>
+    </nav>
+    <div class="cmp-vtour__frames" role="group" aria-label="Guided journey steps">
+        <button type="button" class="cmp-vtour__frame" data-cmp-vtour-prev aria-label="Previous step" title="Previous frame" disabled>
+            <svg viewBox="0 0 8 12" width="7" height="11" aria-hidden="true" focusable="false"><path d="M6.5 1.5L2 6l4.5 4.5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button type="button" class="cmp-vtour__frame" data-cmp-vtour-nextframe aria-label="Next step" title="Next frame">
+            <svg viewBox="0 0 8 12" width="7" height="11" aria-hidden="true" focusable="false"><path d="M1.5 1.5L6 6l-4.5 4.5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+    </div>
+    <p class="cmp-visually-hidden" aria-live="polite" data-cmp-vtour-status></p>
+</div>

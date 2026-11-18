@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:granite="http://www.adobe.com/jcr/granite/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="Header"
+    sling:resourceType="cq/gui/components/authoring/dialog"
+    extraClientlibs="[core.wcm.components.commons.editor.dialog]">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/container">
+        <items jcr:primaryType="nt:unstructured">
+            <tabs
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/tabs"
+                maximized="{Boolean}true">
+                <items jcr:primaryType="nt:unstructured">
+                    <!-- Tab 1: General / Logo, Titles & Icons -->
+                    <tab1
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="General"
+                        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns"
+                        margin="{Boolean}true">
+                        <items jcr:primaryType="nt:unstructured">
+                            <column
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/container">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <logoImage
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                        fieldDescription="Optional logo image from DAM. Leave empty to use the built-in VISA wordmark."
+                                        fieldLabel="Logo Image"
+                                        name="./logoImage"
+                                        rootPath="/content/dam"/>
+                                    <logoAltText
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Alternative text for the logo image (defaults to Visa)"
+                                        fieldLabel="Logo Alt Text"
+                                        name="./logoAltText"/>
+                                    <logoLink
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                        fieldDescription="Link for the brand / logo"
+                                        fieldLabel="Logo Link"
+                                        name="./logoLink"
+                                        rootPath="/content"/>
+                                    <title
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Product title. Defaults to Spend Clarity."
+                                        fieldLabel="Title"
+                                        name="./title"/>
+                                    <subtitle
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Edition title. Defaults to Enterprise."
+                                        fieldLabel="Subtitle"
+                                        name="./subtitle"/>
+                                    <userName
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Name shown on the account menu. Defaults to Andrew."
+                                        fieldLabel="User Name"
+                                        name="./userName"/>
+                                    <notificationCount
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                        fieldDescription="Unread notifications shown on the bell badge. Defaults to 1 (as in the Figma); enter 0 for no badge."
+                                        fieldLabel="Notification Count"
+                                        name="./notificationCount"/>
+                                    <bellIconImg
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                        fieldDescription="Custom bell icon image from DAM (optional; defaults to SVG bell)"
+                                        fieldLabel="Bell Icon Img"
+                                        name="./bellIconImg"
+                                        rootPath="/content/dam"/>
+                                    <userIconImg
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                        fieldDescription="Custom user profile icon image from DAM (optional; defaults to SVG profile)"
+                                        fieldLabel="User Icon Img"
+                                        name="./userIconImg"
+                                        rootPath="/content/dam"/>
+                                </items>
+                            </column>
+                        </items>
+                    </tab1>
+
+                    <!-- Tab 2: Navigation Items (2-Level Nested Multifield) -->
+                    <tab2
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="Navigation"
+                        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns"
+                        margin="{Boolean}true">
+                        <items jcr:primaryType="nt:unstructured">
+                            <column
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/container">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <navItems
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+                                        composite="{Boolean}true"
+                                        fieldDescription="Primary navigation. Items with nested links become dropdowns. Leave empty to use the Figma defaults."
+                                        fieldLabel="Navigation Items">
+                                        <field
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/container"
+                                            name="./navItems">
+                                            <items jcr:primaryType="nt:unstructured">
+                                                <text
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                                    fieldLabel="Text"
+                                                    name="./text"/>
+                                                <link
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                                    fieldLabel="Link"
+                                                    name="./link"
+                                                    rootPath="/content"/>
+                                                <nestedNavItems
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+                                                    composite="{Boolean}true"
+                                                    fieldLabel="Nested Navigation Items">
+                                                    <field
+                                                        jcr:primaryType="nt:unstructured"
+                                                        sling:resourceType="granite/ui/components/coral/foundation/container"
+                                                        name="./nestedNavItems">
+                                                        <items jcr:primaryType="nt:unstructured">
+                                                            <text
+                                                                jcr:primaryType="nt:unstructured"
+                                                                sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                                                fieldLabel="Text"
+                                                                name="./text"/>
+                                                            <link
+                                                                jcr:primaryType="nt:unstructured"
+                                                                sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                                                fieldLabel="Link"
+                                                                name="./link"
+                                                                rootPath="/content"/>
+                                                        </items>
+                                                    </field>
+                                                </nestedNavItems>
+                                            </items>
+                                        </field>
+                                    </navItems>
+                                </items>
+                            </column>
+                        </items>
+                    </tab2>
+
+                    <!-- Tab 3: Login Fields (Multifield) -->
+                    <tab3
+                        jcr:primaryType="nt:unstructured"
+                        jcr:title="Login Fields"
+                        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns"
+                        margin="{Boolean}true">
+                        <items jcr:primaryType="nt:unstructured">
+                            <column
+                                jcr:primaryType="nt:unstructured"
+                                sling:resourceType="granite/ui/components/coral/foundation/container">
+                                <items jcr:primaryType="nt:unstructured">
+                                    <loginFields
+                                        jcr:primaryType="nt:unstructured"
+                                        sling:resourceType="granite/ui/components/coral/foundation/form/multifield"
+                                        composite="{Boolean}true"
+                                        fieldDescription="Links in the account (user name) dropdown, e.g. Profile settings, Sign out."
+                                        fieldLabel="Login Fields">
+                                        <field
+                                            jcr:primaryType="nt:unstructured"
+                                            sling:resourceType="granite/ui/components/coral/foundation/container"
+                                            name="./loginFields">
+                                            <items jcr:primaryType="nt:unstructured">
+                                                <text
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                                                    fieldLabel="Text"
+                                                    name="./text"/>
+                                                <link
+                                                    jcr:primaryType="nt:unstructured"
+                                                    sling:resourceType="cq/gui/components/coral/foundation/form/pathfield"
+                                                    fieldLabel="Link"
+                                                    name="./link"
+                                                    rootPath="/content"/>
+                                            </items>
+                                        </field>
+                                    </loginFields>
+                                </items>
+                            </column>
+                        </items>
+                    </tab3>
+                </items>
+            </tabs>
+        </items>
+    </content>
+</jcr:root>

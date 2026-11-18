@@ -1,0 +1,78 @@
+/* ============================================================
+   VSC Two Column Grid — sidebar + main content
+   ============================================================
+   The left column is tied to the header's primary navigation:
+
+     |24px| Home |24px| My spend ▾ |24px|  ...right column...  | Andrew ▾ |24px|
+          ^ start                  ^ end
+     [ left Layout Container ][24px][ right Layout Container ............ ]
+
+   Default ("tab") alignment = the tab boxes: 38px -> 209.4px from the
+   grid's left edge, which matches the default header. "label" alignment
+   (dialog option) = the tab text: 49px -> 198.4px.
+   _twocolgrid.js measures the live header tabs and overwrites
+   --cmp-twocolgrid-start / -end, so the edges stay exact for any font,
+   authored nav label or viewport width.
+
+   Both columns are OOB Layout Containers (responsivegrid). Nothing here
+   overrides .aem-Grid / .aem-GridColumn, so Layout mode, column widths,
+   policies and the OOB editor placeholders behave exactly as OOB.
+   ============================================================ */
+
+.cmp-twocolgrid {
+    --cmp-twocolgrid-start: 38px;   /* left edge of the "Home" tab       */
+    --cmp-twocolgrid-end: 209.4px;  /* right edge of the "My Spend" tab  */
+    --cmp-twocolgrid-gap: 24px;     /* gap between the two columns       */
+    --cmp-twocolgrid-pad-x: 24px;   /* matches the header right padding  */
+    --cmp-twocolgrid-pad-y: 24px;
+
+    box-sizing: border-box;
+    width: 100%;
+    background: transparent;
+}
+
+.cmp-twocolgrid[data-cmp-twocolgrid-align="label"] {
+    --cmp-twocolgrid-start: 49px;
+    --cmp-twocolgrid-end: 198.4px;
+}
+
+.cmp-twocolgrid__inner {
+    display: grid;
+    grid-template-columns:
+        minmax(0, calc(var(--cmp-twocolgrid-end) - var(--cmp-twocolgrid-start)))
+        minmax(0, 1fr);
+    column-gap: var(--cmp-twocolgrid-gap);
+    align-items: start;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: var(--cmp-twocolgrid-pad-y) var(--cmp-twocolgrid-pad-x) var(--cmp-twocolgrid-pad-y)
+        var(--cmp-twocolgrid-start);
+}
+
+.cmp-twocolgrid__col {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+}
+
+/* Editor only: give empty columns a comfortable drop zone. The OOB
+   placeholder (text, overlay, borders) is left untouched. */
+.cmp-twocolgrid__col .cq-placeholder {
+    min-height: 120px;
+}
+
+/* Stack below the header's mobile breakpoint (its nav collapses there). */
+@media (max-width: 899.98px) {
+    .cmp-twocolgrid__inner {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 16px;
+        padding: 16px var(--cmp-twocolgrid-pad-x);
+    }
+}
+
+@media (max-width: 479.98px) {
+    .cmp-twocolgrid {
+        --cmp-twocolgrid-pad-x: 16px; /* matches the header on small phones */
+    }
+}

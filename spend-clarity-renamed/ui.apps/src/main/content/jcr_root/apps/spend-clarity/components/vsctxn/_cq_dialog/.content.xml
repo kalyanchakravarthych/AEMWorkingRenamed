@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="VSC Transactions"
+    sling:resourceType="cq/gui/components/authoring/dialog">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns">
+        <items jcr:primaryType="nt:unstructured">
+            <column
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container">
+                <items jcr:primaryType="nt:unstructured">
+                    <sectionTitle
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Heading above the card. Defaults to Administrator; enter none to hide it."
+                        fieldLabel="Section heading"
+                        name="./sectionTitle"/>
+                    <title
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Card title. Defaults to Transactions."
+                        fieldLabel="Title"
+                        name="./title"/>
+                    <summaryText
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Defaults to View full transaction summary."
+                        fieldLabel="Summary link text"
+                        name="./summaryText"/>
+                    <summaryLink
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Page with the full transaction summary."
+                        fieldLabel="Summary link"
+                        rootPath="/content"
+                        name="./summaryLink"/>
+                    <id
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Optional HTML ID"
+                        fieldLabel="ID"
+                        name="./id"/>
+                </items>
+            </column>
+        </items>
+    </content>
+</jcr:root>

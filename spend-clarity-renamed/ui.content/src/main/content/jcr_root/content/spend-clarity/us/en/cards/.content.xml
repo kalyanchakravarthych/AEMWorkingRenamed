@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
+    <jcr:content pageTitle="Cards" jcr:primaryType="cq:PageContent" jcr:title="Cards"
+        cq:template="/conf/spend-clarity/settings/wcm/templates/page-content"
+        sling:resourceType="spend-clarity/components/page">
+        <root jcr:primaryType="nt:unstructured" sling:resourceType="spend-clarity/components/container" layout="responsiveGrid">
+            <container jcr:primaryType="nt:unstructured" sling:resourceType="spend-clarity/components/container">
+                <!-- Site header: full width, no column constraint -->
+                <vscheader jcr:primaryType="nt:unstructured" sling:resourceType="spend-clarity/components/vscheader"/>
+                <!-- 22/78 two-column grid: left nav + main content.
+                     Visually aligns to header: left col ends under "My Spend",
+                     right col starts under "Approvals". -->
+                <twocolgrid jcr:primaryType="nt:unstructured" sling:resourceType="spend-clarity/components/twocolgrid">
+                    <left-par jcr:primaryType="nt:unstructured">
+                        <vscleftnav jcr:primaryType="nt:unstructured" sling:resourceType="spend-clarity/components/vscleftnav"/>
+                    </left-par>
+                    <right-par jcr:primaryType="nt:unstructured">
+                        <cardlisting jcr:primaryType="nt:unstructured" sling:resourceType="spend-clarity/components/cardlisting"/>
+                    </right-par>
+                </twocolgrid>
+            </container>
+        </root>
+    </jcr:content>
+</jcr:root>

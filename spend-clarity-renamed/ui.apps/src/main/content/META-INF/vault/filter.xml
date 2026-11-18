@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workspaceFilter version="1.0">
+    <filter root="/apps/spend-clarity/clientlibs"/>
+    <filter root="/apps/spend-clarity/components"/>
+    <filter root="/apps/spend-clarity/i18n"/>
+</workspaceFilter>

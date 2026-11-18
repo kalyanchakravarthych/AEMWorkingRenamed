@@ -1,0 +1,378 @@
+<!--/* VSC Code Expenses — Figma "Spend Clarity Demo FINAL" › Code Expenses & Attach Receipts.
+    Place it in the right column of the VSC Expenses Two Column Grid.
+
+    Reuses the catalog components through their HTL template libraries:
+      dropdown (Show, tax code, filters, "Receipt attached?"), searchctrl (Find, code search),
+      dateinput (date filters), txtinput (amounts, description), toast (success).
+
+    List: Show · Filters · Find · Select all · Code selected expenses.
+    Panel (opens from a row): summary + receipt thumbnail (Manage) · Coding / Details tabs ·
+      Spend Wizard · Expense template · allocation (split) · Cost Center / GL Account / Project
+      pickers · description · Complete / Update / Reset.
+    Image Linking dialog: Linked Images / Image Library · Upload · Upload via Email ·
+      zoom, rotate, link, delete.
+    Rows are server-rendered (AEM editor, no-JS); all data is in-memory. */-->
+<sly data-sly-use.dd="../dropdown/dropdown.html"
+     data-sly-use.sc="../searchctrl/searchctrl.html"
+     data-sly-use.date="../dateinput/dateinput.html"
+     data-sly-use.txt="../txtinput/txtinput.html"
+     data-sly-use.toast="../toast/toast.html"/>
+
+<!--/* One expense row (the script builds the same markup). */-->
+<template data-sly-template.row="${@ id, merchant, amount, date, cat, receipt}">
+    <li class="cmp-codeexp__item" data-cmp-codeexp-item data-id="${id}" data-merchant="${merchant}"
+        data-amount="${amount}" data-date="${date}" data-cat="${cat}" data-receipt="${receipt}" data-done="false">
+        <input type="checkbox" class="cmp-codeexp__check" data-cmp-codeexp-check
+               aria-label="Select ${merchant}, ${amount} USD, ${date}"/>
+        <span class="cmp-codeexp__ico cmp-codeexp__ico--${cat}" aria-hidden="true"><svg viewBox="0 0 16 16"
+                width="14" height="14" focusable="false"><use href="#cx-ico-${cat}"/></svg></span>
+        <span class="cmp-codeexp__merchant">${merchant}</span>
+        <span class="cmp-codeexp__amount">${amount}<span class="cmp-codeexp__cur">USD</span></span>
+        <span class="cmp-codeexp__card"><svg viewBox="0 0 16 12" width="12" height="9" aria-hidden="true"
+                focusable="false"><use href="#cx-ico-card"/></svg>Big_Bank_1</span>
+        <span class="cmp-codeexp__date">${date}</span>
+        <span class="cmp-codeexp__rcpt" data-cmp-codeexp-rcpt hidden="${receipt != 'no'}"><svg viewBox="0 0 16 16"
+                width="13" height="13" aria-hidden="true" focusable="false"><use href="#cx-ico-norcpt"/></svg><span
+                class="cmp-visually-hidden">Receipt missing</span></span>
+        <button type="button" class="cmp-codeexp__open" data-cmp-codeexp-open aria-expanded="false"
+                aria-controls="cmp-codeexp-panel" aria-label="Code ${merchant} expense, ${amount} USD, ${date}">
+            <svg viewBox="0 0 8 12" width="7" height="11" aria-hidden="true" focusable="false"><path
+                    d="M1.5 1.5L6 6l-4.5 4.5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        </button>
+    </li>
+</template>
+
+<!--/* One allocation (split) block. IDs are passed in because HTL has no string concatenation. */-->
+<template data-sly-template.split="${@ n, hidden, amtId, codeId, taxId}">
+    <!--/* Self-contained: HTL templates cannot see objects loaded at file level, so the
+         fields are written out here with the same classes as the txtinput / dropdown
+         components (styles and _codeexp.js work unchanged). */-->
+    <section class="cmp-codeexp__split" data-cmp-codeexp-split="${n}" aria-label="Allocation ${n}" hidden="${hidden}">
+        <div class="cmp-codeexp__split-head">
+            <span class="cmp-codeexp__split-no" aria-hidden="true">${n}</span>
+            <button data-sly-test="${hidden}" type="button" class="cmp-codeexp__link" data-cmp-codeexp-unsplit>Remove allocation</button>
+        </div>
+        <div class="cmp-codeexp__split-grid">
+            <div class="cmp-codeexp__amounts">
+                <div class="cmp-codeexp__money">
+                    <div class="cmp-field cmp-field--inset">
+                        <div class="cmp-field__box">
+                            <label class="cmp-field__label" for="${amtId}">Amount incl. tax</label>
+                            <input type="text" id="${amtId}" name="amount" class="cmp-field__input" inputmode="decimal"
+                                   autocomplete="off" aria-describedby="${amtId}-err"/>
+                        </div>
+                        <p class="cmp-field__err" id="${amtId}-err" hidden>Enter an amount.</p>
+                    </div>
+                    <span class="cmp-codeexp__unit" aria-hidden="true">USD</span>
+                </div>
+                <div class="cmp-field cmp-field--select cmp-field--inset">
+                    <div class="cmp-field__box">
+                        <label class="cmp-field__label" for="${codeId}">Tax code</label>
+                        <select id="${codeId}" name="taxCode" class="cmp-field__select" aria-describedby="${codeId}-err">
+                            <option value="N/A" selected>N/A</option>
+                            <option value="Sales tax 8.5%">Sales tax 8.5%</option>
+                            <option value="Exempt">Exempt</option>
+                        </select>
+                        <svg class="cmp-field__chev" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+                            <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <p class="cmp-field__err" id="${codeId}-err" hidden>Please choose an option.</p>
+                </div>
+                <div class="cmp-codeexp__money">
+                    <div class="cmp-field cmp-field--inset">
+                        <div class="cmp-field__box">
+                            <label class="cmp-field__label" for="${taxId}">Tax amount</label>
+                            <input type="text" id="${taxId}" name="taxAmount" class="cmp-field__input" inputmode="decimal"
+                                   autocomplete="off" aria-describedby="${taxId}-err"/>
+                        </div>
+                        <p class="cmp-field__err" id="${taxId}-err" hidden>Enter a tax amount.</p>
+                    </div>
+                    <span class="cmp-codeexp__unit" aria-hidden="true">USD</span>
+                </div>
+                <button data-sly-test="${!hidden}" type="button" class="cmp-codeexp__btn cmp-codeexp__btn--split" data-cmp-codeexp-split-btn>
+                    <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false"><path
+                            d="M6 11V6L2 1M6 6l4-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+                    <span>Split</span>
+                </button>
+            </div>
+            <div class="cmp-codeexp__dims">
+                <div class="cmp-codeexp__dim" data-dim="cc"><span class="cmp-codeexp__dim-label">Cost Center</span><div class="cmp-codeexp__dim-cell" data-cmp-codeexp-cell></div></div>
+                <div class="cmp-codeexp__dim" data-dim="gl"><span class="cmp-codeexp__dim-label">GL Account</span><div class="cmp-codeexp__dim-cell" data-cmp-codeexp-cell></div></div>
+                <div class="cmp-codeexp__dim" data-dim="pr"><span class="cmp-codeexp__dim-label">Project</span><div class="cmp-codeexp__dim-cell" data-cmp-codeexp-cell></div></div>
+            </div>
+        </div>
+        <p class="cmp-field__err cmp-codeexp__split-err" data-cmp-codeexp-split-err hidden></p>
+    </section>
+</template>
+
+<section class="cmp-codeexp" id="${properties.id}" data-cmp-codeexp aria-labelledby="cmp-codeexp-title">
+    <!--/* Icon sprite (decorative, referenced with <use>). */-->
+    <svg class="cmp-codeexp__sprite" aria-hidden="true" focusable="false">
+        <symbol id="cx-ico-supplies" viewBox="0 0 16 16"><path d="M2 11c3-1 5-4 6-8 2 2 4 3 6 3-1 4-5 7-12 5z" fill="currentColor"/></symbol>
+        <symbol id="cx-ico-airline" viewBox="0 0 16 16"><path d="M15 2.5L9.5 8 11 14l-1.5 1.5L7 10l-3 3v2H2.5l-.5-1.5L.5 13H2l3-3-5-2.5L1.5 6l6 1.5L13 2a1.4 1.4 0 012 .5z" fill="currentColor"/></symbol>
+        <symbol id="cx-ico-professional" viewBox="0 0 16 16"><circle cx="8" cy="4.5" r="3" fill="currentColor"/><path d="M2 15c0-3.5 2.5-6 6-6s6 2.5 6 6z" fill="currentColor"/></symbol>
+        <symbol id="cx-ico-transport" viewBox="0 0 16 16"><rect x="3" y="1.5" width="10" height="11" rx="2" fill="currentColor"/><rect x="4.5" y="3.5" width="7" height="4" fill="#fff"/><circle cx="5.5" cy="10" r="1" fill="#fff"/><circle cx="10.5" cy="10" r="1" fill="#fff"/><path d="M4.5 12.5v2M11.5 12.5v2" stroke="currentColor" stroke-width="1.5"/></symbol>
+        <symbol id="cx-ico-restaurant" viewBox="0 0 16 16"><path d="M3 2l10 12M13 2L3 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="cx-ico-office" viewBox="0 0 16 16"><path d="M2 15V2h7v13zM10 15V6h4v9z" fill="currentColor"/><path d="M4 4h1M6.5 4h1M4 7h1M6.5 7h1M4 10h1M6.5 10h1" stroke="#fff" stroke-width="1.2"/></symbol>
+        <symbol id="cx-ico-other" viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.6" fill="currentColor"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/><circle cx="13" cy="8" r="1.6" fill="currentColor"/></symbol>
+        <symbol id="cx-ico-car" viewBox="0 0 16 16"><path d="M2 12V8l2-4.5h8L14 8v4zM2 12v2h2.5v-2M11.5 12v2H14v-2" fill="currentColor"/><path d="M4.5 6.5h7" stroke="#fff" stroke-width="1.2"/><circle cx="4.5" cy="9.5" r="1" fill="#fff"/><circle cx="11.5" cy="9.5" r="1" fill="#fff"/></symbol>
+        <symbol id="cx-ico-card" viewBox="0 0 16 12"><rect x=".75" y=".75" width="14.5" height="10.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 4h14" stroke="currentColor" stroke-width="2"/></symbol>
+        <symbol id="cx-ico-norcpt" viewBox="0 0 16 16"><path d="M3 1.5h10v13l-1.7-1.2-1.6 1.2-1.7-1.2L6.3 14.5 4.7 13.3 3 14.5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M1.5 14.5l13-13" stroke="currentColor" stroke-width="1.6"/></symbol>
+        <symbol id="cx-ico-receipt" viewBox="0 0 16 16"><path d="M3 1.5h10v13l-1.7-1.2-1.6 1.2-1.7-1.2L6.3 14.5 4.7 13.3 3 14.5z" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3" stroke="currentColor" stroke-width="1.2"/></symbol>
+    </svg>
+
+    <div class="cmp-codeexp__layout">
+        <!-- ================= List ================= -->
+        <div class="cmp-codeexp__listpane">
+            <h1 class="cmp-codeexp__title" id="cmp-codeexp-title">${properties.title || 'Expenses'}</h1>
+
+            <div class="cmp-codeexp__controls" role="search" aria-label="Expenses">
+                <div class="cmp-codeexp__show">
+                    <sly data-sly-call="${dd.field @ id='cx-show', name='show', label='Show', variant='inset',
+                                           options=['My expenses', 'Completed expenses', 'Missing receipts', 'All expenses'],
+                                           value='My expenses'}"/>
+                </div>
+                <div class="cmp-codeexp__filters">
+                    <button type="button" class="cmp-codeexp__filters-btn" data-cmp-codeexp-filters-btn
+                            aria-expanded="false" aria-controls="cx-filters">
+                        <span class="cmp-codeexp__filters-text"><span class="cmp-codeexp__mini">Filters</span><span
+                                data-cmp-codeexp-filters-label>Default</span></span>
+                        <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                            <path d="M1 4h9M13 4h2M1 8h3M7 8h8M1 12h9M13 12h2" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="11.5" cy="4" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="5.5" cy="8" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="11.5" cy="12" r="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                    <div class="cmp-codeexp__pop cmp-codeexp__filterpop" id="cx-filters" role="dialog"
+                         aria-labelledby="cx-filters-title" hidden>
+                        <h2 class="cmp-codeexp__pop-title" id="cx-filters-title">Filters</h2>
+                        <sly data-sly-call="${dd.field @ id='cx-f-cat', name='category', label='Merchant category group',
+                                               variant='inset', placeholder='All categories',
+                                               options=['Airlines', 'Auto Rentals', 'Ground Transportation', 'Office',
+                                                        'Other', 'Other Supplies', 'Professional Services', 'Restaurants']}"/>
+                        <sly data-sly-call="${dd.field @ id='cx-f-rcpt', name='receipt', label='Receipt', variant='inset',
+                                               placeholder='Any', options=['Attached', 'Missing']}"/>
+                        <sly data-sly-call="${date.field @ id='cx-f-from', name='from', label='Date from', variant='inset'}"/>
+                        <sly data-sly-call="${date.field @ id='cx-f-to', name='to', label='Date to', variant='inset'}"/>
+                        <div class="cmp-codeexp__pop-actions">
+                            <button type="button" class="cmp-codeexp__btn" data-cmp-codeexp-filters-clear>Clear</button>
+                            <button type="button" class="cmp-codeexp__btn cmp-codeexp__btn--primary" data-cmp-codeexp-filters-apply>Apply</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cmp-codeexp__find">
+                    <sly data-sly-call="${sc.search @ id='cx-find', label='Find expenses', placeholder='Find'}"/>
+                    <button type="button" class="cmp-codeexp__find-btn" data-cmp-codeexp-find-btn aria-label="Find">
+                        <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true" focusable="false">
+                            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="3"/>
+                            <path d="M20 20l-4.5-4.5" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="cmp-codeexp__spacer" aria-hidden="true"></div>
+            </div>
+
+            <div class="cmp-codeexp__bulk">
+                <button type="button" class="cmp-codeexp__link" data-cmp-codeexp-selectall aria-pressed="false">Select all</button>
+                <button type="button" class="cmp-codeexp__link" data-cmp-codeexp-codesel disabled>
+                    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">
+                        <path d="M2 3h7M2 3v11h11V8" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                        <path d="M12.5 1.5l2 2L8 10l-2.5.5L6 8z" fill="currentColor"/>
+                    </svg>
+                    <span>Code selected expenses</span>
+                </button>
+                <span class="cmp-visually-hidden" aria-live="polite" data-cmp-codeexp-status></span>
+            </div>
+
+            <ul class="cmp-codeexp__list" data-cmp-codeexp-list aria-labelledby="cmp-codeexp-title">
+                <sly data-sly-call="${row @ id='e01', merchant='Housewares Store', amount='45.99', date='01/12/2026', cat='supplies', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e02', merchant='Airline A', amount='158.20', date='01/02/2026', cat='airline', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e03', merchant='Tax Preparation Service', amount='39.95', date='01/02/2026', cat='professional', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e04', merchant='Taxi N Co', amount='180.00', date='01/02/2026', cat='transport', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e05', merchant='Airline A', amount='457.40', date='12/22/2025', cat='airline', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e06', merchant='Coffee Shop 1 Usa 000729', amount='41.79', date='12/22/2025', cat='restaurant', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e07', merchant='Office Supplies 1 8548', amount='129.43', date='12/13/2025', cat='office', receipt='no'}"/>
+                <sly data-sly-call="${row @ id='e08', merchant='Airline D', amount='658.40', date='12/13/2025', cat='airline', receipt='no'}"/>
+                <sly data-sly-call="${row @ id='e09', merchant='D J', amount='45.37', date='12/13/2025', cat='other', receipt='no'}"/>
+                <sly data-sly-call="${row @ id='e10', merchant='Car Rental A', amount='67.11', date='12/12/2025', cat='car', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e11', merchant='Airline A', amount='421.24', date='11/07/2025', cat='airline', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e12', merchant='Qsr Ohare T-2', amount='18.82', date='11/07/2025', cat='restaurant', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e13', merchant='Online Travel Agency', amount='15.00', date='11/05/2025', cat='transport', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e14', merchant='Car Rental B', amount='78.08', date='11/05/2025', cat='car', receipt='yes'}"/>
+                <sly data-sly-call="${row @ id='e15', merchant='Liquor Store 207', amount='8.39', date='10/31/2025', cat='restaurant', receipt='yes'}"/>
+            </ul>
+            <p class="cmp-codeexp__empty" data-cmp-codeexp-empty hidden>No expenses match the selected view, filters or search.</p>
+        </div>
+
+        <!-- ================= Coding panel ================= -->
+        <section class="cmp-codeexp__panel" id="cmp-codeexp-panel" aria-labelledby="cx-panel-title" data-cmp-codeexp-panel hidden>
+            <header class="cmp-codeexp__phead">
+                <button type="button" class="cmp-codeexp__pclose" data-cmp-codeexp-close aria-label="Close expense">
+                    <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false"><path
+                            d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/></svg>
+                </button>
+                <h2 class="cmp-codeexp__ptitle" id="cx-panel-title" tabindex="-1" data-cmp-codeexp-ptitle></h2>
+            </header>
+            <div class="cmp-codeexp__summary">
+                <dl class="cmp-codeexp__facts">
+                    <div><dt>Amount</dt><dd data-cx="amount"></dd></div>
+                    <div><dt>Date</dt><dd data-cx="date"></dd></div>
+                    <div><dt>Issuer</dt><dd>Big Bank 1</dd></div>
+                    <div><dt>Merchant category group</dt><dd><svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"
+                            focusable="false" data-cx="catico"><use href="#cx-ico-supplies"/></svg> <span data-cx="catname"></span></dd></div>
+                </dl>
+                <div class="cmp-codeexp__thumbwrap">
+                    <button type="button" class="cmp-codeexp__thumb" data-cmp-codeexp-thumb aria-haspopup="dialog">
+                        <img alt="" width="100" height="72" data-cmp-codeexp-thumbimg hidden/>
+                        <span class="cmp-codeexp__nothumb" data-cmp-codeexp-nothumb><svg viewBox="0 0 16 16" width="22" height="22"
+                                aria-hidden="true" focusable="false"><use href="#cx-ico-norcpt"/></svg></span>
+                        <span class="cmp-visually-hidden" data-cmp-codeexp-thumblabel>Open receipt images</span>
+                    </button>
+                    <button type="button" class="cmp-codeexp__manage" data-cmp-codeexp-manage aria-expanded="false" aria-controls="cx-manage">
+                        <svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true" focusable="false"><use href="#cx-ico-receipt"/></svg>
+                        <span>Manage</span>
+                    </button>
+                    <div class="cmp-codeexp__pop cmp-codeexp__managepop" id="cx-manage" hidden>
+                        <button type="button" class="cmp-codeexp__link" data-cmp-codeexp-library>Image Library</button>
+                        <sly data-sly-call="${dd.field @ id='cx-rcpt', name='receiptAttached', label='Receipt attached?',
+                                               variant='inset', options=['N/A', 'Yes', 'No'], value='N/A'}"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cmp-codeexp__tabs" role="tablist" aria-label="Expense">
+                <button type="button" role="tab" id="cx-tab-coding" aria-controls="cx-tp-coding" aria-selected="true" data-cmp-codeexp-tab>Coding</button>
+                <button type="button" role="tab" id="cx-tab-details" aria-controls="cx-tp-details" aria-selected="false" tabindex="-1" data-cmp-codeexp-tab>Details</button>
+            </div>
+
+            <form class="cmp-codeexp__form" novalidate data-cmp-codeexp-form>
+                <div class="cmp-codeexp__tp" role="tabpanel" id="cx-tp-coding" aria-labelledby="cx-tab-coding">
+                    <p class="cmp-codeexp__done" data-cmp-codeexp-done hidden>Submitted for approval.</p>
+                    <p class="cmp-form__error" role="alert" data-cmp-codeexp-error hidden></p>
+                    <div class="cmp-codeexp__tools">
+                        <button type="button" class="cmp-codeexp__btn" data-cmp-codeexp-wizard>Spend Wizard</button>
+                        <div class="cmp-codeexp__menuwrap">
+                            <button type="button" class="cmp-codeexp__btn" data-cmp-codeexp-tplbtn id="cx-tplbtn"
+                                    aria-haspopup="menu" aria-expanded="false" aria-controls="cx-tplmenu">Expense template</button>
+                            <ul class="cmp-codeexp__menu" id="cx-tplmenu" role="menu" aria-labelledby="cx-tplbtn" hidden>
+                                <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-codeexp-tpl="FIN|500050|">Office purchase</button></li>
+                                <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-codeexp-tpl="OPN|500030|">Team meal</button></li>
+                                <li role="none"><button type="button" role="menuitem" tabindex="-1" data-cmp-codeexp-tpl="OPN|500090|P200">Project services</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cmp-codeexp__splits">
+                        <sly data-sly-call="${split @ n=1, hidden=false, amtId='cx-amt-1', codeId='cx-code-1', taxId='cx-tax-1'}"/>
+                        <sly data-sly-call="${split @ n=2, hidden=true, amtId='cx-amt-2', codeId='cx-code-2', taxId='cx-tax-2'}"/>
+                    </div>
+                    <div class="cmp-codeexp__desc">
+                        <sly data-sly-call="${txt.area @ id='cx-desc', name='description', label='Description', rows=4,
+                                               maxlength='500'}"/>
+                        <p class="cmp-codeexp__count" id="cx-desc-count" data-cmp-codeexp-count>500 characters left</p>
+                    </div>
+                </div>
+                <div class="cmp-codeexp__tp" role="tabpanel" id="cx-tp-details" aria-labelledby="cx-tab-details" hidden>
+                    <dl class="cmp-codeexp__details">
+                        <div><dt>Merchant</dt><dd data-cx="merchant"></dd></div>
+                        <div><dt>Amount</dt><dd data-cx="amount"></dd></div>
+                        <div><dt>Transaction date</dt><dd data-cx="date"></dd></div>
+                        <div><dt>Card</dt><dd>Big_Bank_1 (Big Bank 1)</dd></div>
+                        <div><dt>Merchant category group</dt><dd data-cx="catname"></dd></div>
+                        <div><dt>Receipt</dt><dd data-cx="receipt"></dd></div>
+                        <div><dt>Status</dt><dd data-cx="state"></dd></div>
+                    </dl>
+                </div>
+                <footer class="cmp-codeexp__pfoot">
+                    <button type="submit" class="cmp-codeexp__btn cmp-codeexp__btn--complete" data-cmp-codeexp-complete>Complete</button>
+                    <button type="button" class="cmp-codeexp__btn" data-cmp-codeexp-update disabled>Update</button>
+                    <button type="button" class="cmp-codeexp__btn cmp-codeexp__btn--end" data-cmp-codeexp-reset>Reset</button>
+                </footer>
+            </form>
+
+            <!--/* Shared code picker (Cost Center / GL Account / Project). */-->
+            <div class="cmp-codeexp__pop cmp-codeexp__picker" role="dialog" aria-labelledby="cx-picker-title" data-cmp-codeexp-picker hidden>
+                <h3 class="cmp-codeexp__pop-title" id="cx-picker-title" data-cmp-codeexp-picker-title>Choose</h3>
+                <sly data-sly-call="${sc.search @ id='cx-picker-q', label='Search codes', placeholder='Search code or name'}"/>
+                <ul class="cmp-codeexp__options" data-cmp-codeexp-options></ul>
+                <p class="cmp-codeexp__options-empty" data-cmp-codeexp-options-empty hidden>No codes found.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- ================= Image Linking dialog ================= -->
+    <div class="cmp-codeexp__modal" data-cmp-codeexp-modal hidden>
+        <div class="cmp-codeexp__backdrop" data-cmp-codeexp-backdrop></div>
+        <div class="cmp-codeexp__dialog" role="dialog" aria-modal="true" aria-labelledby="cx-img-title" tabindex="-1">
+            <header class="cmp-codeexp__dhead">
+                <div>
+                    <h2 class="cmp-codeexp__dtitle" id="cx-img-title">Image Linking</h2>
+                    <p class="cmp-codeexp__dmeta" data-cmp-codeexp-dmeta></p>
+                </div>
+                <div class="cmp-codeexp__dtabs" role="tablist" aria-label="Images">
+                    <button type="button" role="tab" id="cx-itab-linked" aria-controls="cx-ip-linked" aria-selected="true" data-cmp-codeexp-itab>Linked Images</button>
+                    <button type="button" role="tab" id="cx-itab-library" aria-controls="cx-ip-library" aria-selected="false" tabindex="-1" data-cmp-codeexp-itab>Image Library</button>
+                </div>
+                <button type="button" class="cmp-codeexp__dclose" data-cmp-codeexp-dclose aria-label="Close image linking">
+                    <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true" focusable="false"><path
+                            d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                </button>
+            </header>
+            <div class="cmp-codeexp__dtools">
+                <button type="button" class="cmp-codeexp__btn" data-cmp-codeexp-upload>
+                    <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false"><path
+                            d="M4 12.5H3a3 3 0 01-.4-6A4.5 4.5 0 0111.3 5 3.5 3.5 0 0112 12.5h-1M8 8v6M5.8 10L8 7.8l2.2 2.2"
+                            stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                    <span>Upload</span>
+                </button>
+                <input type="file" accept="image/*" multiple hidden data-cmp-codeexp-file/>
+                <button type="button" class="cmp-codeexp__btn" data-cmp-codeexp-email aria-expanded="false" aria-controls="cx-email-info">Upload via Email</button>
+                <p class="cmp-codeexp__email" id="cx-email-info" data-cmp-codeexp-emailinfo hidden>
+                    Email receipts to <strong>receipts@spendclarity.example</strong> from your registered address.
+                    They appear in the Image Library within a few minutes.
+                </p>
+            </div>
+            <div class="cmp-codeexp__ip" role="tabpanel" id="cx-ip-linked" aria-labelledby="cx-itab-linked">
+                <ul class="cmp-codeexp__images" data-cmp-codeexp-linked></ul>
+                <p class="cmp-codeexp__noimg" data-cmp-codeexp-linked-empty hidden>No receipts are linked to this expense yet.</p>
+            </div>
+            <div class="cmp-codeexp__ip" role="tabpanel" id="cx-ip-library" aria-labelledby="cx-itab-library" hidden>
+                <ul class="cmp-codeexp__images" data-cmp-codeexp-library-list></ul>
+                <p class="cmp-codeexp__noimg" data-cmp-codeexp-library-empty hidden>The Image Library is empty. Upload a receipt to add it.</p>
+            </div>
+            <div class="cmp-codeexp__pop cmp-codeexp__imgpop" role="dialog" aria-labelledby="cx-imgpop-title" data-cmp-codeexp-imgpop hidden>
+                <div class="cmp-codeexp__imgpop-head">
+                    <h3 class="cmp-codeexp__pop-title" id="cx-imgpop-title" data-cmp-codeexp-imgname></h3>
+                    <button type="button" class="cmp-codeexp__dclose" data-cmp-codeexp-imgclose aria-label="Close image actions">
+                        <svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true" focusable="false"><path
+                                d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+                <div class="cmp-codeexp__imgtools">
+                    <button type="button" class="cmp-codeexp__icon" data-cmp-codeexp-img="zoom" aria-pressed="false" aria-label="Zoom">
+                        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"
+                                fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M20 20l-4.5-4.5M10.5 7.5v6M7.5 10.5h6"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </button>
+                    <button type="button" class="cmp-codeexp__icon" data-cmp-codeexp-img="left" aria-label="Rotate left">
+                        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path d="M4 4v6h6M4.5 10A8 8 0 1 1 6 17"
+                                stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <button type="button" class="cmp-codeexp__icon" data-cmp-codeexp-img="right" aria-label="Rotate right">
+                        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false"><path d="M20 4v6h-6M19.5 10A8 8 0 1 0 18 17"
+                                stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+                <div class="cmp-codeexp__imgacts">
+                    <button type="button" class="cmp-codeexp__btn cmp-codeexp__btn--link" data-cmp-codeexp-img="link">Link</button>
+                    <button type="button" class="cmp-codeexp__btn cmp-codeexp__btn--danger" data-cmp-codeexp-img="delete">Delete</button>
+                </div>
+            </div>
+            <p class="cmp-visually-hidden" aria-live="polite" data-cmp-codeexp-dstatus></p>
+        </div>
+    </div>
+
+    <sly data-sly-call="${toast.toast @ type='success', hook='codeexp', title='Success',
+                           message='Expense coded and submitted for approval.'}"/>
+</section>

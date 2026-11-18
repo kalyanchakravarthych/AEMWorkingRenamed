@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+    jcr:primaryType="nt:unstructured"
+    jcr:title="VSC Guided Journey"
+    sling:resourceType="cq/gui/components/authoring/dialog">
+    <content
+        jcr:primaryType="nt:unstructured"
+        sling:resourceType="granite/ui/components/coral/foundation/fixedcolumns">
+        <items jcr:primaryType="nt:unstructured">
+            <column
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="granite/ui/components/coral/foundation/container">
+                <items jcr:primaryType="nt:unstructured">
+                    <homePage
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Home (dashboard) page. Defaults to the parent of the current page."
+                        fieldLabel="Home page"
+                        rootPath="/content"
+                        name="./homePage"/>
+                    <cardsPage
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Cards page. Defaults to the sibling page cards."
+                        fieldLabel="Cards page"
+                        rootPath="/content"
+                        name="./cardsPage"/>
+                    <virtualCardsPage
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Virtual cards page. Defaults to the sibling page virtual-cards."
+                        fieldLabel="Virtual cards page"
+                        rootPath="/content"
+                        name="./virtualCardsPage"/>
+                    <expenseCategoriesPage
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Expense categories page. Defaults to the sibling page expense-categories."
+                        fieldLabel="Expense categories page"
+                        rootPath="/content"
+                        name="./expenseCategoriesPage"/>
+                    <codeExpensesPage
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/pathfield"
+                        fieldDescription="Code expenses page. Defaults to the sibling page code-expenses."
+                        fieldLabel="Code expenses page"
+                        rootPath="/content"
+                        name="./codeExpensesPage"/>
+                    <showWelcome
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/select"
+                        fieldDescription="Show the Spend Clarity for Enterprise welcome on the home page once per browser tab."
+                        fieldLabel="Welcome popover"
+                        name="./showWelcome">
+                        <items jcr:primaryType="nt:unstructured">
+                            <yes jcr:primaryType="nt:unstructured" text="Show" value="true"/>
+                            <no jcr:primaryType="nt:unstructured" text="Do not show" value="false"/>
+                        </items>
+                    </showWelcome>
+                    <menuLabel
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Accessible name of the chapters menu. Defaults to Demo chapters."
+                        fieldLabel="Chapters menu label"
+                        name="./menuLabel"/>
+                    <id
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="granite/ui/components/coral/foundation/form/textfield"
+                        fieldDescription="Optional HTML ID"
+                        fieldLabel="ID"
+                        name="./id"/>
+                </items>
+            </column>
+        </items>
+    </content>
+</jcr:root>

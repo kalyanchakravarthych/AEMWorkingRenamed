@@ -1,0 +1,44 @@
+<!--/* VSC Text Input — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.txt="../txtinput/txtinput.html"
+                 data-sly-call="${txt.field @ id='my-id', name='myName', label='My label', required=true}"/>
+    Arguments: id, name, label, type, required, value, placeholder, errorText,
+               inputmode, autocomplete, maxlength, variant ('inset' = label inside the box, 'inline' = label left of the box).
+    A11y: visible <label for>, required announced natively (required attr),
+          error text linked with aria-describedby; JS sets aria-invalid. */-->
+<template data-sly-template.field="${@ id, name, label, type, required, value, placeholder, errorText,
+                                      inputmode, autocomplete, maxlength, variant}">
+    <sly data-sly-test.fieldId="${id || 'cmp-txt'}"/>
+    <div class="cmp-field${variant ? ' cmp-field--' : ''}${variant}">
+        <div class="cmp-field__box">
+            <label class="cmp-field__label" for="${fieldId}">${label || 'Field label'}<span data-sly-test="${required}"
+                    class="cmp-field__req" aria-hidden="true">*</span></label>
+            <input type="${type || 'text'}" id="${fieldId}" name="${name || 'field'}" class="cmp-field__input"
+                   value="${value}" placeholder="${placeholder}" inputmode="${inputmode}" maxlength="${maxlength}"
+                   autocomplete="${autocomplete || 'off'}"
+                   aria-describedby="${fieldId}-err"
+                   data-sly-attribute.required="${required}"/>
+        </div>
+        <p class="cmp-field__err" id="${fieldId}-err" hidden>${errorText || 'This field is required.'}</p>
+    </div>
+</template>
+
+<!--/* Multi-line text. Arguments: id, name, label, required, rows, maxlength, errorText, variant. */-->
+<template data-sly-template.area="${@ id, name, label, required, rows, maxlength, errorText, variant}">
+    <sly data-sly-test.fieldId="${id || 'cmp-txtarea'}"/>
+    <div class="cmp-field cmp-field--area${variant ? ' cmp-field--' : ''}${variant}">
+        <div class="cmp-field__box">
+            <label class="cmp-field__label" for="${fieldId}">${label || 'Details'}<span data-sly-test="${required}"
+                    class="cmp-field__req" aria-hidden="true">*</span></label>
+            <textarea id="${fieldId}" name="${name || 'details'}" class="cmp-field__textarea"
+                      rows="${rows || 3}" maxlength="${maxlength}"
+                      aria-describedby="${fieldId}-err"
+                      data-sly-attribute.required="${required}"></textarea>
+        </div>
+        <p class="cmp-field__err" id="${fieldId}-err" hidden>${errorText || 'This field is required.'}</p>
+    </div>
+</template>
+
+<!--/* Standalone: when dropped on a page as its own component. */-->
+<sly data-sly-call="${field @ id=properties.inputId, name=properties.name, label=properties.label,
+                       type=properties.inputType, required=properties.required,
+                       placeholder=properties.placeholder}"/>

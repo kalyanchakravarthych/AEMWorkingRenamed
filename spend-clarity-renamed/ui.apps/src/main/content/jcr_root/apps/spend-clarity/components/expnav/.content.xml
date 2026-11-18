@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    jcr:description="Expenses section navigation: yellow Add action + Expenses link. Place in the left column of the VSC Expenses Two Column Grid."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Expenses Left Nav"
+    componentGroup="VSC - Layout"/>

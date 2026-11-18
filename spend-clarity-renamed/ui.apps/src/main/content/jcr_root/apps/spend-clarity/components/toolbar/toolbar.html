@@ -1,0 +1,11 @@
+<sly data-sly-test.selText="${properties.selectionText || '0 cards selected'}"
+     data-sly-test.actionText="${properties.actionText || 'Update cards'}"/>
+<div class="cmp-toolbar" role="toolbar" aria-label="Bulk actions">
+    <div class="cmp-toolbar__selection"><span aria-live="polite">${selText}</span></div>
+    <button type="button" class="cmp-toolbar__action" disabled>
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">
+            <path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z" fill="currentColor"/>
+        </svg>
+        ${actionText}
+    </button>
+</div>

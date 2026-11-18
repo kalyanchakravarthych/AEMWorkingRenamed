@@ -1,0 +1,34 @@
+<!--/* VSC Two Column Grid — sidebar + main content.
+
+    Column geometry is tied to the header's primary navigation:
+      - Left column  starts under the "Home" tab
+      - Left column  ends   under the "My spend" tab
+      - Right column starts one 24px gap later and ends on the header's
+        right content edge (under "Andrew").
+    _twocolgrid.scss sets fallback values that match the default header;
+    _twocolgrid.js measures the real tabs and refines them, so alignment
+    holds for any font, authored nav label or viewport width.
+
+    Alignment (dialog "Align to"):
+      tab (default) = edges of the tab boxes: left edge of "Home" tab to
+                      right edge of "My spend" tab (24px -> 226px)
+      label         = edges of the visible tab text (40px -> 210px)
+
+    Both columns are OOB Layout Containers (wcm/foundation/components/
+    responsivegrid): Layout mode, column resizing, policies and the OOB
+    drop-zone placeholders all work unchanged inside each column.
+
+    Below 900px (where the header collapses into the Menu button) the grid
+    stacks into a single column. */-->
+<div class="cmp-twocolgrid" id="${properties.id}"
+     data-cmp-twocolgrid
+     data-cmp-twocolgrid-align="${properties.alignTo == 'label' ? 'label' : 'tab'}">
+    <div class="cmp-twocolgrid__inner">
+        <div class="cmp-twocolgrid__col cmp-twocolgrid__col--left">
+            <sly data-sly-resource="${'left-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+        <div class="cmp-twocolgrid__col cmp-twocolgrid__col--right">
+            <sly data-sly-resource="${'right-par' @ resourceType='wcm/foundation/components/responsivegrid'}"/>
+        </div>
+    </div>
+</div>

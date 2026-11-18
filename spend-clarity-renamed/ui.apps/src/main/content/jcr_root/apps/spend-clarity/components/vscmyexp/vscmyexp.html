@@ -1,0 +1,25 @@
+<!--/* VSC Expenses (My expenses) — Figma "Spend Clarity Demo FINAL" › Home.
+    Section heading (MY EXPENSES) and a card summary: card name + masked number, cardholder,
+    Coding Required, Pending Approval, Current Balance and Available Credit. All fields are
+    authorable; the Figma values are the defaults. */-->
+<section class="cmp-vmyexp" id="${properties.id}" aria-labelledby="cmp-vmyexp-title">
+    <h2 class="cmp-vmyexp__section" id="cmp-vmyexp-title">${properties.sectionTitle || 'My Expenses'}</h2>
+    <div class="cmp-vmyexp__card">
+        <h3 class="cmp-vmyexp__name">
+            <svg viewBox="0 0 16 12" width="14" height="11" aria-hidden="true" focusable="false">
+                <rect x=".75" y=".75" width="14.5" height="10.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M1 4h14" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <span>${properties.cardName || 'Corporate Card'}</span>
+            <span class="cmp-vmyexp__sep" aria-hidden="true">|</span>
+            <span><span class="cmp-visually-hidden">ending in </span>${properties.cardNumber || '****-****-****-0003'}</span>
+        </h3>
+        <p class="cmp-vmyexp__holder"><span class="cmp-visually-hidden">Cardholder: </span>${properties.cardholder || 'Stacey Taylor'}</p>
+        <dl class="cmp-vmyexp__stats">
+            <div><dt>Coding Required</dt><dd>${properties.codingRequired || '0'}</dd></div>
+            <div><dt>Pending Approval</dt><dd>${properties.pendingApproval || '135'}</dd></div>
+            <div><dt>Current Balance (USD)</dt><dd>${properties.currentBalance || '1,235.75'}</dd></div>
+            <div><dt>Available Credit (USD)</dt><dd>${properties.availableCredit || '6,364.25'}</dd></div>
+        </dl>
+    </div>
+</section>

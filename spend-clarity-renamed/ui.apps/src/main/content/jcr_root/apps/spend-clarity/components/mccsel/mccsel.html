@@ -1,0 +1,20 @@
+<!--/* VSC Merchant Category Selector — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.mcc="../mccsel/mccsel.html"
+                 data-sly-call="${mcc.groups @ name='blockedGroups', title='Blocked merchant category groups'}"/>
+    Arguments: title (legend), name (checkbox name), options (array; defaults below).
+    A11y: <fieldset>/<legend> group of native checkboxes styled as chips. */-->
+<template data-sly-template.groups="${@ title, name, options}">
+    <sly data-sly-test.chipNames="${options || ['Airlines', 'Alcohol and Tobacco', 'Auto Rentals',
+        'Block purchases at adult-themed merchant', 'Entertainment & Sports', 'Fuel/Driver',
+        'Ground Transportation', 'Hotel Merchants', 'Jewelry Stores', 'Medical', 'Restaurants', 'Utilities']}"/>
+    <fieldset class="cmp-mccsel" data-cmp-mccsel>
+        <legend class="cmp-mccsel__legend">${title || 'Blocked merchant category groups'}</legend>
+        <div class="cmp-mccsel__chips">
+            <label data-sly-repeat.chip="${chipNames}" class="cmp-mccsel__chip"><input type="checkbox"
+                    name="${name || 'merchantGroups'}" value="${chip}"/><span>${chip}</span></label>
+        </div>
+    </fieldset>
+</template>
+
+<!--/* Standalone */-->
+<sly data-sly-call="${groups @ title=properties.title}"/>

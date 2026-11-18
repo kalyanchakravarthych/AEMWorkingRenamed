@@ -1,0 +1,80 @@
+<!--/* VSC Dropdown — HTL template library + standalone component.
+    Reuse:  <sly data-sly-use.dd="../dropdown/dropdown.html"
+                 data-sly-call="${dd.field @ id='currency', name='currency', label='Source currency',
+                                 required=true, options=['US Dollar', 'Euro'], value='US Dollar'}"/>
+    Arguments: id, name, label, required, options (array of strings), value (selected),
+               placeholder (adds an empty first option), errorText, variant ('inset' | 'inline'), disabled.
+    Native <select>: full keyboard and screen reader support. */-->
+<template data-sly-template.field="${@ id, name, label, required, options, value, placeholder, errorText, variant,
+                                      disabled}">
+    <sly data-sly-test.fieldId="${id || 'cmp-sel'}"/>
+    <div class="cmp-field cmp-field--select${variant ? ' cmp-field--' : ''}${variant}">
+        <div class="cmp-field__box">
+            <label class="cmp-field__label" for="${fieldId}">${label || 'Choose'}<span data-sly-test="${required}"
+                    class="cmp-field__req" aria-hidden="true">*</span></label>
+            <select id="${fieldId}" name="${name || 'choice'}" class="cmp-field__select"
+                    aria-describedby="${fieldId}-err"
+                    data-sly-attribute.required="${required}"
+                    data-sly-attribute.disabled="${disabled}">
+                <option data-sly-test="${placeholder}" value="">${placeholder}</option>
+                <option data-sly-repeat.opt="${options}" value="${opt}" selected="${opt == value}">${opt}</option>
+            </select>
+            <svg class="cmp-field__chev" viewBox="0 0 12 8" width="12" height="8" aria-hidden="true" focusable="false">
+                <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <p class="cmp-field__err" id="${fieldId}-err" hidden>${errorText || 'Please choose an option.'}</p>
+    </div>
+</template>
+
+<!--/* Radio group. Arguments: name, label (legend), options (array), value (checked), variant.
+    A11y: <fieldset>/<legend> with native radios (arrow keys move between options). */-->
+<template data-sly-template.radios="${@ name, label, options, value, variant}">
+    <fieldset class="cmp-field cmp-field--radios${variant ? ' cmp-field--' : ''}${variant}">
+        <legend class="cmp-field__label">${label || 'Choose one'}</legend>
+        <div class="cmp-field__radios">
+            <label data-sly-repeat.opt="${options}" class="cmp-field__radio"><input type="radio"
+                    name="${name || 'choice'}" value="${opt}" checked="${opt == value}"/><span>${opt}</span></label>
+        </div>
+    </fieldset>
+</template>
+
+<!--/* Multi-select with removable chips (e.g. "× All Codes").
+    Arguments: id, name, label, options (array), selected (array of pre-selected options), variant.
+    Behaviour: _multiselect.js. The chip list and the checkbox list stay in sync; without
+    JavaScript the checkboxes are plain form controls.
+    A11y: the toggle button has aria-expanded/aria-controls; options are native checkboxes in a
+    <fieldset>; each chip is a button named "Remove <option>". */-->
+<template data-sly-template.multi="${@ id, name, label, options, selected, variant}">
+    <sly data-sly-test.fieldId="${id || 'cmp-multi'}"/>
+    <div class="cmp-field cmp-field--multi${variant ? ' cmp-field--' : ''}${variant}" data-cmp-multiselect>
+        <div class="cmp-field__box">
+            <span class="cmp-field__label" id="${fieldId}-label">${label || 'Choose'}</span>
+            <div class="cmp-multi">
+                <ul class="cmp-multi__chips" data-cmp-multi-chips aria-labelledby="${fieldId}-label">
+                    <li data-sly-repeat.opt="${options}" data-sly-test="${opt in selected}"><button type="button"
+                            class="cmp-multi__chip" data-value="${opt}" aria-label="Remove ${opt}"><span
+                            aria-hidden="true">×</span>${opt}</button></li>
+                </ul>
+                <button type="button" class="cmp-multi__toggle" id="${fieldId}-toggle" data-cmp-multi-toggle
+                        aria-expanded="false" aria-controls="${fieldId}-list"
+                        aria-labelledby="${fieldId}-toggle ${fieldId}-label">
+                    <span class="cmp-visually-hidden">Choose</span>
+                    <svg viewBox="0 0 12 8" width="10" height="7" aria-hidden="true" focusable="false">
+                        <path d="M1 1.5l5 5 5-5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+            <fieldset class="cmp-multi__list" id="${fieldId}-list" data-cmp-multi-list hidden>
+                <legend class="cmp-visually-hidden">${label || 'Choose'}</legend>
+                <label data-sly-repeat.opt="${options}" class="cmp-multi__option"><input type="checkbox"
+                        name="${name || 'choices'}" value="${opt}" checked="${opt in selected}"/><span>${opt}</span></label>
+            </fieldset>
+        </div>
+    </div>
+</template>
+
+<!--/* Standalone */-->
+<sly data-sly-call="${field @ id=properties.selectId, name=properties.name, label=properties.label,
+                       required=properties.required, placeholder='Please select…',
+                       options=['Option 1', 'Option 2', 'Option 3']}"/>

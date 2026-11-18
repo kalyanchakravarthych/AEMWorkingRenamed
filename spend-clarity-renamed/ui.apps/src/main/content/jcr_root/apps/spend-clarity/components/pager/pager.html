@@ -1,0 +1,28 @@
+<!--/* VSC Pagination — previous / "Page X of Y" / next.
+    Works on its own (static "Page 1 of 1"), and is driven by a list
+    component such as VSC Card Listing:
+      - By default it controls the nearest list placed ABOVE it.
+      - "Controls" (dialog) = the list's ID, to link a specific list.
+    Contract (see _pager.js):
+      list  -> pager : "vsc:pager-render" { page, pages }
+      pager -> list  : "vsc:pager-change" { page }
+    A11y: <nav> landmark with an authorable label, real <button>s with
+    names, disabled at the ends, and a polite live region for the status. */-->
+<nav class="cmp-pager" id="${properties.id}"
+     aria-label="${properties.label || 'Pagination'}"
+     data-cmp-pager
+     data-cmp-pager-for="${properties.controls}"
+     data-cmp-pager-page="1"
+     data-cmp-pager-pages="1">
+    <button type="button" class="cmp-pager__btn" aria-label="Previous page" data-cmp-pager-prev disabled>
+        <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
+            <path d="M8 1L3 6l5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+    <span class="cmp-pager__status" aria-live="polite" aria-atomic="true" data-cmp-pager-status>Page 1 of 1</span>
+    <button type="button" class="cmp-pager__btn" aria-label="Next page" data-cmp-pager-next disabled>
+        <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true" focusable="false">
+            <path d="M4 1l5 5-5 5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+</nav>

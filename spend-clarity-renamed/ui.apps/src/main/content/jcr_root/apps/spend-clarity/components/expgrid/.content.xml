@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0"
+    cq:isContainer="{Boolean}true"
+    jcr:description="Expenses layout: left column from the page edge to the end of the header's My spend tab; right column starts under the next tab (Approvals in the Figma)."
+    jcr:primaryType="cq:Component"
+    jcr:title="VSC Expenses Two Column Grid"
+    componentGroup="VSC - Layout"/>
